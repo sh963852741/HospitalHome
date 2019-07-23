@@ -72,6 +72,11 @@ const components = {
     path: "/manage/contributor/my",
     layout: "admin",
     component: () => import(/* webpackChunkName: "CodeContributor" */"@p/CodeContributor/MyCode")
+  },
+  Commits: {
+    path: "/manage/contributor/commits",
+    layout: "admin",
+    component: () => import(/* webpackChunkName: "CodeContributor" */"@p/CodeContributor/Commits")
   }
 }
 
