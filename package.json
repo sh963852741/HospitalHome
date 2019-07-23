@@ -1,9 +1,9 @@
 {
-  "name": "cli-test",
+  "name": "hospital-home",
   "version": "1.0.0",
-  "description": "A Vue.js project",
-  "author": "hx",
-  "private": true,
+  "description": "医院之家助手",
+  "author": "厦门米雀软件科技有限公司",
+  "private": false,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "admin": "webpack-dev-server --inline --progress --config build/webpack.dev.admin.config.js",
