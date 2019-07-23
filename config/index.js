@@ -12,17 +12,17 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       "/api": {
-        target: "http://localhost:2034", // "http://item.ricebird.cn",
+        target: "http://hh.ricebird.cn", // "http://item.ricebird.cn",
         changeOrigin: true
       },
       "/signalr": {
-        target: "http://localhost:2034", // "http://item.ricebird.cn",
+        target: "http://hh.ricebird.cn", // "http://item.ricebird.cn",
         changeOrigin: true
       }
     },
 
     // Various Dev Server settings
-    host: '192.168.1.103', // can be overwritten by process.env.HOST
+    host: '127.0.0.1', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
