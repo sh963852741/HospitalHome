@@ -56,19 +56,8 @@ export default {
         app.getMenus(menus => {
             this.$set(app, "menus", menus);
             this.menus = app.menus;
-            this.collapseMenu(this.$route.name)
+            this.collapseMenu(this.$route.meta.showAs)
         })
-    },
-    beforeRouteEnter (to, from, next) {
-        next(vm => {
-            // console.log("enter", to, from)
-            vm.collapseMenu(to.name)
-        });
-    },
-    beforeRouteUpdate (to, from, next) {
-        // console.log("update", to, from)
-        this.collapseMenu(to.name)
-        next();
     },
     methods: {
         collapseMenu (name) {
@@ -116,7 +105,7 @@ export default {
     },
     watch: {
         $route (v) {
-            this.collapseMenu(this.$route.name)
+            this.collapseMenu(this.$route.meta.showAs)
         }
     },
     computed: {

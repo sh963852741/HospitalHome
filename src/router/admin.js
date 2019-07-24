@@ -76,6 +76,7 @@ const components = {
   Commits: {
     path: "/manage/contributor/commits",
     layout: "admin",
+    showAs: "MyCode",
     component: () => import(/* webpackChunkName: "CodeContributor" */"@p/CodeContributor/Commits")
   }
 }
@@ -85,14 +86,14 @@ function generatePath (page) {
   let result = {
     path: '/' + page,
     name: page,
-    meta: { layout: "admin" },
+    meta: { layout: "admin", showAs: obj.showAs || page },
     component: null
   };
   if (typeof obj === "function") {
     result.component = obj;
   } else {
     if (obj.layout) {
-      obj.meta = { layout: obj.layout };
+      obj.meta = { layout: obj.layout, showAs: obj.showAs || page };
     }
     result = {...result, ...obj};
   }
