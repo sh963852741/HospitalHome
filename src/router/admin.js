@@ -78,6 +78,11 @@ const components = {
     layout: "admin",
     showAs: "MyCode",
     component: () => import(/* webpackChunkName: "CodeContributor" */"@p/CodeContributor/Commits")
+  },
+  ImportAuditor: {
+    path: "/manage/contributor/ImportAuditor",
+    layout: "admin",
+    component: () => import(/* webpackChunkName: "CodeContributor" */"@p/CodeContributor/ImportAuditor")
   }
 }
 
