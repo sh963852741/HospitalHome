@@ -15,6 +15,7 @@ require('font-awesome-webpack');
 require('./api/signalR')
 var axios = require("axios");
 var app = require("./config");
+var enums = require("./config/enums");
 Vue.config.productionTip = false
 Vue.mixin(globalMixin);
 Vue.use(router);
@@ -38,8 +39,9 @@ axios.all([dic, config]).then(axios.spread((d, c) => {
         }
     }
 
+    app.dictionary = { ...enums };
     if (dictionary.success) {
-        app.dictionary = dictionary.Dictionary;
+        app.dictionary = { ...app.dictionary, ...dictionary.Dictionary };
     }
 
     /* eslint-disable no-new */

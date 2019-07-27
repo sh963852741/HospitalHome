@@ -81,7 +81,7 @@ export default {
         });
         return {
             hospitalName: this.$route.query.hospital,
-            dic: app.dictionary["源码审核状态"],
+            dic: app.dictionary["CodeCheckStatus"],
             columns: columns,
             empty: "00000000-0000-0000-0000-000000000000",
             data: [],

@@ -22,7 +22,7 @@
                 <a href="javascript:;" @click="removeData(row.Display, row.Value, row.Category)" style="margin-left: 8px;">[删除]</a>
             </template>
         </i-table>
-        <Page v-if="totalPage > 1" :total="totalRow" ref="pager" :page="page" :page-size="pageSize" @on-change="pageChage" @on-page-size-change="pageSizeChange" show-elevator show-sizer show-total/>
+        <Page v-if="totalPage > 1" :total="totalRow" ref="pager" :current.sync="page" :page-size="pageSize" @on-change="pageChage" @on-page-size-change="pageSizeChange" show-elevator show-sizer show-total/>
         <i-modal title="新建/编辑数据字典" v-model="showDialog" :mask-closable="false">
             <i-form ref="modifyForm" :model="model" :label-width="80" :rules="rules">
                 <i-form-item label="显示内容" label-for="display" prop="display">
@@ -47,7 +47,7 @@ var app = require("@/config")
 var axios = require("axios");
 export default {
     methods: {
-        getData () {
+        getData (reload) {
             let page = this.page;
             let pageSize = this.pageSize;
             let keyword = this.category;
@@ -59,9 +59,11 @@ export default {
                 let msg = pd.data;
                 if (msg.success) {
                     THIS.data = msg.data;
-                    THIS.columns[2].filters = msg.filters.map(e => {
-                        return { label: e, value: e };
-                    });
+                    if (!reload) {
+                        THIS.columns[2].filters = msg.filters.map(e => {
+                            return { label: e, value: e };
+                        });
+                    }
                     this.totalRow = msg.totalRow;
                     THIS.filters = msg.filters;
                 }
@@ -73,7 +75,7 @@ export default {
         onFilterChange (e, e1) {
             let filter = e._filterChecked[0]
             this.category = filter;
-            this.getData();
+            this.getData(true);
         },
         toEdit (display, value, category) {
             let model = {
@@ -139,8 +141,7 @@ export default {
                     title: "字典归属",
                     key: "Category",
                     filterMultiple: false,
-                    filterMethod () {
-                        return true;
+                    filterRemote (value, key, col) {
                     },
                     filters: []
                 },

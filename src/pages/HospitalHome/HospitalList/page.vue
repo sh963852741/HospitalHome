@@ -18,7 +18,7 @@
                 <a href="javascript:;" @click="removeHospital(row.ID)" style="margin-left: 8px;" v-if="permissions.remove">[删除]</a>
             </template>
         </i-table>
-        <Page v-if="totalPage > 1" :total="totalRow" ref="pager" :page="page" :page-size="pageSize" @on-change="pageChage" @on-page-size-change="pageSizeChange" show-elevator show-sizer show-total/>
+        <Page v-if="totalPage > 1" :total="totalRow" ref="pager" :current.sync="page" :page-size="pageSize" @on-change="pageChage" @on-page-size-change="pageSizeChange" show-elevator show-sizer show-total/>
     </div>
 </template>
 

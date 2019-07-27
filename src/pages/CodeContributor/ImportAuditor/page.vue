@@ -26,7 +26,7 @@
                     <a v-if="row.CheckStatus !== 301" class="btn" :class="{ disabled: isloading }" @click="check(row.ID, 'SetUploadFail')">[不通过]</a>
                 </template>
             </i-table>
-            <Page v-if="totalPage > 1" :total="totalRow" ref="pager" :page="page" :page-size="pageSize" @on-change="pageChage" @on-page-size-change="pageSizeChange" show-elevator show-sizer show-total/>
+            <Page v-if="totalPage > 1" :total="totalRow" ref="pager" :current.sync="page" :page-size="pageSize" @on-change="pageChage" @on-page-size-change="pageSizeChange" show-elevator show-sizer show-total/>
         </div>
     </i-card>
 </template>
@@ -101,7 +101,7 @@ export default {
             title: "操作"
         });
 
-        let dic = app.dictionary["源码审核状态"];
+        let dic = app.dictionary["CodeCheckStatus"];
         let options = [];
         for (let index in dic) {
             let el = dic[index];
@@ -110,7 +110,6 @@ export default {
                 value: el
             });
         }
-        console.log(options);
         return {
             dic,
             options,

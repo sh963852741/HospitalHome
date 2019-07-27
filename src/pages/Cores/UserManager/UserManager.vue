@@ -19,7 +19,7 @@
                 <Button @click="showUserDetail('')" v-if="permissions.add">添加成员</Button>
                 <!-- <Button>删除成员</Button> -->
                 <Table :loading="isLoadingUser" stripe :columns="columns1" :data="userData" class="user-table" width="100%"></Table>
-                <Page :total="totalUsers" :page="page" :page-size="pageSize" @on-change="pageChage" @on-page-size-change="pageSizeChange" show-elevator show-sizer show-total/>
+                <Page :total="totalUsers" :current.sync="page" :page-size="pageSize" @on-change="pageChage" @on-page-size-change="pageSizeChange" show-elevator show-sizer show-total/>
             </i-col>
             <user-detail :user-id="userId" v-if="showTab === 'detail'" @on-saved="showUser" />
         </Row>
