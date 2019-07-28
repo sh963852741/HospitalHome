@@ -7,7 +7,7 @@
                 </i-alert>
                 <i-form :model="model">
                     <i-form-item label="科室名称">
-                        <i-input v-model="model.Name" />
+                        <i-input v-model="model.Name" :disabled="true" />
                     </i-form-item>
                     <i-row type="flex">
                         <i-col span="12">
@@ -89,7 +89,7 @@ export default {
         load () {
             axios.post("/api/hospital/GetBasicDepart", { id: this.id }, msg => {
                 if (!msg.success) {
-                    this.$Message.warning("找不到医院");
+                    this.$Message.warning("找不到部门");
                     this.$router.go(-1);
                 } else {
                     let model = msg.data;
