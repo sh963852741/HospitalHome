@@ -149,6 +149,11 @@ const components = {
     layout: "admin",
     showAs: "ExpertFinal",
     component: () => import(/* webpackChunkName: "Reviews" */"@p/Reviews/ExpertDetail")
+  },
+  SymptomGuide: {
+    path: "/manage/hospital/SymptomGuide",
+    layout: "admin",
+    component: () => import(/* webpackChunkName: "hospital" */"@p/HospitalHome/SymptomGuide")
   }
 }
 

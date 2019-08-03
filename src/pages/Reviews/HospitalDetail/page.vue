@@ -7,7 +7,7 @@
                 </i-alert>
                 <i-form :model="model">
                     <i-form-item label="医院名称">
-                        <i-input v-model="model.Name" />
+                        <i-input v-model="model.Name" disabled />
                     </i-form-item>
                     <i-row :gutter="16">
                         <i-col span="12">
