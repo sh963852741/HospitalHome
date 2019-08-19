@@ -47,7 +47,7 @@ const components = {
   Categorise: {
     path: "manage/cms/categories",
     layout: "admin",
-    component: () => import(/* webpackChunkName: "cms" */"@p/Core/CmsCategorise")
+    component: () => import(/* webpackChunkName: "cms" */"@p/Cores/CmsCategorise")
   },
   HospitalDepartManage: {
     path: "/manage/config/hospitaldepart",
