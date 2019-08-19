@@ -16,6 +16,7 @@ require('./api/signalR')
 var axios = require("axios");
 var app = require("./config");
 var enums = require("./config/enums");
+let UEditor = require("vue-ueditor-wrap");
 Vue.config.productionTip = false
 Vue.mixin(globalMixin);
 Vue.use(router);
@@ -24,6 +25,7 @@ Vue.use(rView);
 Vue.component("admin-layout", adminLayout);
 Vue.component("empty-layout", emptyLayout);
 Vue.component("login-layout", loginLayout);
+Vue.component("ueditor", UEditor);
 let dic = axios._post("/api/config/GetDataDictionary")
 let config = axios._post("/api/config/GetBasicConfig")
 axios.all([dic, config]).then(axios.spread((d, c) => {

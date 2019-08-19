@@ -44,6 +44,11 @@ const components = {
     layout: "admin",
     component: () => import(/* webpackChunkName: "config" */"@p/Cores/DataDictionary")
   },
+  Categorise: {
+    path: "manage/cms/categories",
+    layout: "admin",
+    component: () => import(/* webpackChunkName: "cms" */"@p/Core/CmsCategorise")
+  },
   HospitalDepartManage: {
     path: "/manage/config/hospitaldepart",
     layout: "admin",

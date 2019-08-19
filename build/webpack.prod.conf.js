@@ -120,7 +120,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
       minChunks: Infinity
-    }),
+    })
     // This instance extracts shared chunks from code splitted chunks and bundles them
     // in a separate chunk, similar to the vendor chunk
     // see: https://webpack.js.org/plugins/commons-chunk-plugin/#extra-async-commons-chunk
@@ -138,10 +138,10 @@ const webpackConfig = merge(baseWebpackConfig, {
     // }),
 
     // copy custom static assets
-    new CopyWebpackPlugin([
+    ,new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../static'),
-        to: config.build.assetsSubDirectory,
+        to: config.build.assetsThirdDirectory,
         ignore: ['.*']
       }
     ])
