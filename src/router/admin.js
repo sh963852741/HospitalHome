@@ -44,6 +44,11 @@ const components = {
     layout: "admin",
     component: () => import(/* webpackChunkName: "config" */"@p/Cores/DataDictionary")
   },
+  Categorise: {
+    path: "manage/cms/categories",
+    layout: "admin",
+    component: () => import(/* webpackChunkName: "cms" */"@p/Core/CmsCategorise")
+  },
   HospitalDepartManage: {
     path: "/manage/config/hospitaldepart",
     layout: "admin",
@@ -149,6 +154,11 @@ const components = {
     layout: "admin",
     showAs: "ExpertFinal",
     component: () => import(/* webpackChunkName: "Reviews" */"@p/Reviews/ExpertDetail")
+  },
+  SymptomGuide: {
+    path: "/manage/hospital/SymptomGuide",
+    layout: "admin",
+    component: () => import(/* webpackChunkName: "hospital" */"@p/HospitalHome/SymptomGuide")
   }
 }
 
