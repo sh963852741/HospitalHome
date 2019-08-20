@@ -3,7 +3,7 @@
         <i-col span="18">
             <i-card icon="ios-build" title="基本信息">
                 <i-alert v-if="model.Source">
-                    该部门的网址是：<a :href="model.Source" target="_blank">{{model.Source}}</a>
+                    该专家对应的链接是：<a :href="model.Source" target="_blank">{{model.Source}}</a>
                 </i-alert>
                 <i-form :model="model">
                     <i-form-item label="专家名称">
@@ -29,7 +29,7 @@
                         <Icon type="ios-bulb-outline" slot="icon"></Icon>
                         特别提示
                         <template slot="desc">
-                            如果这个部门不应该显示出来，比如这不是一个门诊部门。那么，就在标签里添加“<a href="javascript:;" @click="addTag('不显示')"><b>不显示</b></a>”三个字，或者点此链接即可。
+                            如果该专家不应该显示出来。那么，就在标签里添加“<a href="javascript:;" @click="addTag('不显示')"><b>不显示</b></a>”三个字，或者点此链接即可。
                         </template>
                     </i-alert>
                     <i-form-item label="标签">

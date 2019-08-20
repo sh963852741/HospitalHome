@@ -48,6 +48,7 @@
 let app = require("@/config");
 let axios = require("axios");
 var _ = require("lodash");
+
 export default {
     methods: {
         goTo (id) {
