@@ -28,26 +28,7 @@ export default {
             this.isloading = true;
             cropper.getCropData(data => {
                 data = data.substring(data.indexOf(',') + 1)
-                axios.postStream(this.action, {
-                    fileName: "avatar.jpg",
-                    usage: this.usage,
-                    table: this.relateTable,
-                    id: this.id,
-                    single: this.single,
-                    base64Img: data
-                }, msg => {
-                    if (!msg.success) {
-                        this.isloading = false;
-                        this.showDialog = false;
-                        this.$Message.warning(msg.msg);
-                    } else {
-                        this.isloading = false;
-                        this.showDialog = false;
-                        this.$Message.success("上传成功");
-                        this.style.background = `url(${msg.download})`;
-                        this.$emit("input", msg.download);
-                    }
-                })
+                this.uploadImage(data);
             });
         },
         onImageChanged (e, num) {
@@ -57,6 +38,15 @@ export default {
                 return false;
             }
             var reader = new FileReader();
+            let base64 = function (buffer) {
+                var binary = '';
+                var bytes = new Uint8Array(buffer);
+                var len = bytes.byteLength;
+                for (var i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return window.btoa(binary);
+            }
             reader.onload = e => {
                 let data;
                 this.$refs.uploader.value = "";
@@ -67,9 +57,36 @@ export default {
                     data = e.target.result;
                 }
                 this.image = data;
-                this.showDialog = true;
+                if (this.needCrop) {
+                    this.showDialog = true;
+                } else {
+                    let code = base64(e.target.result);
+                    this.uploadImage(code);
+                }
             };
             reader.readAsArrayBuffer(file);
+        },
+        uploadImage (base64Code) {
+            axios.postStream(this.action, {
+                fileName: "avatar.jpg",
+                usage: this.usage,
+                table: this.relateTable,
+                id: this.id,
+                single: this.single,
+                base64Img: base64Code
+            }, msg => {
+                if (!msg.success) {
+                    this.isloading = false;
+                    this.showDialog = false;
+                    this.$Message.warning(msg.msg);
+                } else {
+                    this.isloading = false;
+                    this.showDialog = false;
+                    this.$Message.success("上传成功");
+                    this.style.background = `url(${msg.download})`;
+                    this.$emit("input", msg.download);
+                }
+            });
         },
         onSuccess (response, file, fileList) {
             console.log(response, file, fileList)
@@ -84,6 +101,14 @@ export default {
             type: Number,
             required: true
         },
+        displayWidth: {
+            type: Number,
+            required: false
+        },
+        displayHeight: {
+            type: Number,
+            required: false
+        },
         action: {
             type: String,
             default: "/api/cms/UploadImage"
@@ -97,6 +122,10 @@ export default {
         fixedBox: Boolean,
         id: String,
         single: Boolean,
+        needCrop: {
+            type: Boolean,
+            default: true
+        },
         showText: {
             type: Boolean,
             default: true
@@ -105,7 +134,9 @@ export default {
     computed: {
         iconSize: {
             get () {
-                let size = this.height > this.width ? this.width : this.height;
+                let height = this.displayHeight || this.height;
+                let width = this.displayWidth || this.width;
+                let size = height > width ? width : height;
                 return size / 4;
             }
         }
@@ -121,9 +152,10 @@ export default {
                 single: this.single
             },
             style: {
-                width: this.width + 'px',
-                height: this.height + 'px',
-                lineHeight: this.height + 'px',
+                width: (this.displayWidth || this.width) + 'px',
+                height: (this.displayHeight || this.height) + 'px',
+                lineHeight: (this.displayHeight || this.height) + 'px',
+                "background-size": "cover",
                 background: ""
             },
             pic: this.value || require('../../assets/images/no-pic.jpg')

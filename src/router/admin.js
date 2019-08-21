@@ -45,9 +45,14 @@ const components = {
     component: () => import(/* webpackChunkName: "config" */"@p/Cores/DataDictionary")
   },
   Categorise: {
-    path: "manage/cms/categories",
+    path: "/manage/cms/categories",
     layout: "admin",
     component: () => import(/* webpackChunkName: "cms" */"@p/Cores/CmsCategorise")
+  },
+  ArticleDetail: {
+    path: "/manage/cms/articledetail",
+    layout: "admin",
+    component: () => import(/* webpackChunkName: "cms" */"@p/Cores/CmsArticleDetail")
   },
   HospitalDepartManage: {
     path: "/manage/config/hospitaldepart",
