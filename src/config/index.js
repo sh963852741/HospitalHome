@@ -6,6 +6,7 @@ let appSetting = {
     title: "登录",
     nav: "",
     reloadOrg: "",
+    reloadCategory: "",
     userInfo: {},
     checkPermission () { return false; },
     webInfo: {

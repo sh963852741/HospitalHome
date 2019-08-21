@@ -183,7 +183,7 @@ export default {
         };
     },
     watch: {
-        'app.reloadOrg': {
+        'app.reloadCategory': {
             handler (v) {
                 this.getDepartTree();
             }
