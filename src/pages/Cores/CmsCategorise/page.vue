@@ -1,6 +1,7 @@
 <template>
   <i-row>
     <i-col span="8">
+      <Tree :data="data"></Tree>
     </i-col>
     <i-col span="16">
       <i-row class="searcher" type="flex">
@@ -9,7 +10,7 @@
             <i-button size="large" type=“Primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
           </i-col>
           <i-col span="12">
-            <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData" />
+            <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData()" />
           </i-col>
           <i-col span="6"/>
           <i-col span="4">
@@ -100,7 +101,6 @@ export default {
       },
       addModel (row) {
           let form = this.$refs["form"];
-            let flag = !row;
             row = row || {
               ID: "",
               CatName: "",
@@ -115,6 +115,7 @@ export default {
                 ParentId: row.ParentId,
                 Reorder: row.Reorder
             };
+            let flag = !row;
             flag && form.resetFields();
             this.showDialog = true;
         },
