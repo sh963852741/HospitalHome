@@ -1,15 +1,16 @@
 <template>
   <i-row>
     <i-col span="8">
+      <Tree :data="data"></Tree>
     </i-col>
     <i-col span="16">
       <i-row class="searcher" type="flex">
         <i-col class="middle margin" span="24">
           <i-col  span="2">
-            <i-button size="large" type=“Primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
+            <i-button size="large" type=“primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
           </i-col>
           <i-col span="12">
-            <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData" />
+            <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData()" />
           </i-col>
           <i-col span="6"/>
           <i-col span="4">
@@ -17,36 +18,32 @@
           </i-col>
         </i-col>
       </i-row>
-      <i-row type="flex" v-show="display" class="margin-bottom">
-          <i-col span="12">
-            <i-col span="4" >
-              <span class="text">分类名:</span>
-            </i-col>
-            <i-col span="8" :style="display">
-              <Input style="width: 300px " v-model="cateKeyword"/>
-            </i-col>
-          </i-col>
-          <i-col span="12">
-            <i-col span="4" >
-              <span class="text">导航名:</span>
-            </i-col>
-            <i-col span="8" :style="display">
-              <Input style="width: 300px " v-model="actKeyword"/>
-            </i-col>
-          </i-col>
+      <i-row style="height : 16px;"/>
+      <i-row v-show="display" class="text">
+        <i-col span="2">
+          <span>分类名：</span>
+        </i-col>
+        <i-col span="8">
+          <Input v-model="cateKeyword"/>
+        </i-col>
+        <i-col span="2">
+          <span>导航名:</span>
+        </i-col>
+        <i-col span="8">
+          <Input v-model="actKeyword"/>
+        </i-col>
+        <i-col span="2" style="float : right;">
+          <i-button type="primary" class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
+        </i-col>
       </i-row>
-      <i-row v-show="display">
-          <i-col span="24" class="margin-bottom">
-           <i-button type="Primary" class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
-          </i-col>
-      </i-row>
+      <i-row style="height : 5px;"/>
       <i-row type="flex" class="filter-keywords" v-if="filters.length">
-        <i-col span="3" class="title">
-          <i-col class="margin-bottom text">
-            <Icon type="ios-funnel" /> 检索项：
+        <i-col span="2" class="title">
+          <i-col>
+            <Icon type="ios-funnel" /><span style="font-size:12px;"> 检索项：</span>
           </i-col>
         </i-col>
-        <i-col span="21" class="margin-bottom text">
+        <i-col span="19">
             <template v-for="(item, index) in filters">
                 <i-tag :key="index" closable @on-close="removeTag(index)">{{item.display}}</i-tag>
             </template>
@@ -98,21 +95,9 @@ export default {
           this.display = false;
         }
       },
-      fixModel (row) {
-        let form = this.$refs["form"];
-        form.resetFields();
-        this.model.ID = row.ID;
-        this.model.CatName = row.CatName;
-        this.model.Action = row.Action;
-        this.model.ParentId = row.ParentId;
-        this.model.Reorder = row.Reorder;
-        this.addModel(this.model);
-      },
       addModel (row) {
-        debugger;
           let form = this.$refs["form"];
-            let flag = !row;
-            row=row||{
+            row = row || {
               ID: "",
               CatName: "",
               Action: "",
@@ -126,13 +111,13 @@ export default {
                 ParentId: row.ParentId,
                 Reorder: row.Reorder
             };
+            let flag = !row;
             flag && form.resetFields();
             this.showDialog = true;
         },
       confirm () {
         axios.post("/api/cms/SaveCategory", this.model, msg => {
           if (msg.success) {
-            console.log(msg);
             this.getData();
           }
         });
@@ -150,7 +135,6 @@ export default {
         });
         axios.post("/api/cms/categorylist", params, msg => {
           if (msg.success) {
-            console.log(msg);
             this.data = msg.data;
           }
         })
@@ -290,7 +274,7 @@ export default {
         */
     },
     mounted () {
-        app.title = "医院审核";
+        app.title = "新闻分类管理";
         // let audit = this.$route.name.indexOf("Final") > -1 ? 5 : 4;
         this.getData();
     }
@@ -300,22 +284,9 @@ export default {
 <style lang="less">
   .text{
     font-size: 14px;
-    word-spacing: 1px;
-    white-space: normal;
+    word-spacing: 2px;
     line-height: 32px;
+    text-align: center;
   }
-  .margin
-  {
-    margin-bottom: 8px;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-  }
-  .middle
-  {
-    vertical-align: middle;
-  }
-  .margin-bottom{
-    margin-bottom: 16px;
-  }
+
 </style>

@@ -35,7 +35,7 @@
                 </div>
                 <div class="mt20">
                     <i-button type="primary" @click="saveData">提交</i-button>
-                    <i-button>取消</i-button>
+                    <i-button @click="cancel">取消</i-button>
                 </div>
             </i-card>
         </i-col>
@@ -43,7 +43,7 @@
             <i-card title="基本信息">
                 <i-form :model="article" :label-width="80">
                     <i-form-item label="所属分类">
-                        <category-selector v-model="article.CategoryId" :placeholder="article.CategoryName" />
+                        <category-selector v-model="article.CategoryId" :placeholder="article.CategoryName" :clearable="true" />
                     </i-form-item>
                     <i-form-item label="作者">
                         <i-input v-model="article.Author" />
@@ -63,7 +63,7 @@
                     </i-form-item>
                     <i-form-item>
                         <i-button type="primary" @click="saveData">提交</i-button>
-                        <i-button>取消</i-button>
+                        <i-button @click="cancel">取消</i-button>
                     </i-form-item>
                 </i-form>
             </i-card>
@@ -94,11 +94,15 @@ export default {
         saveData () {
             axios.postStream("/api/cms/SaveArticle", this.article, msg => {
                 if (msg.success) {
-                    this.$Message.warning("保存成功")
+                    this.$Message.warning("保存成功");
+                    this.$router.push({ name: "ArticleList" })
                 } else {
                     this.$Message.warning("保存失败：" + msg.details.join(','));
                 }
             })
+        },
+        cancel () {
+            this.$router.push({ name: "ArticleList" })
         }
     },
     data () {
