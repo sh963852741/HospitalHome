@@ -49,9 +49,15 @@ const components = {
     layout: "admin",
     component: () => import(/* webpackChunkName: "cms" */"@p/Cores/CmsCategorise")
   },
+  ArticleList: {
+    path: "/manage/cms/articlelist",
+    layout: "admin",
+    component: () => import(/* webpackChunkName: "cms" */"@p/Cores/CmsArticleList")
+  },
   ArticleDetail: {
     path: "/manage/cms/articledetail",
     layout: "admin",
+    showAs: "ArticleList",
     component: () => import(/* webpackChunkName: "cms" */"@p/Cores/CmsArticleDetail")
   },
   HospitalDepartManage: {
