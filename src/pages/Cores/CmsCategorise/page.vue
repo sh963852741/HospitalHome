@@ -1,16 +1,321 @@
 <template>
   <i-row>
+    <i-col span="8">
+    </i-col>
+    <i-col span="16">
+      <i-row class="searcher" type="flex">
+        <i-col class="middle margin" span="24">
+          <i-col  span="2">
+            <i-button size="large" type=“Primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
+          </i-col>
+          <i-col span="12">
+            <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData" />
+          </i-col>
+          <i-col span="6"/>
+          <i-col span="4">
+            <i-button size="large" type="text" @click="ctrlDisplay()" class="ivu-btn ivu-btn-text">{{display?"普通搜索":"高级搜索"}}</i-button>
+          </i-col>
+        </i-col>
+      </i-row>
+      <i-row type="flex" v-show="display" class="margin-bottom">
+          <i-col span="12">
+            <i-col span="4" >
+              <span class="text">分类名:</span>
+            </i-col>
+            <i-col span="8" :style="display">
+              <Input style="width: 300px " v-model="cateKeyword"/>
+            </i-col>
+          </i-col>
+          <i-col span="12">
+            <i-col span="4" >
+              <span class="text">导航名:</span>
+            </i-col>
+            <i-col span="8" :style="display">
+              <Input style="width: 300px " v-model="actKeyword"/>
+            </i-col>
+          </i-col>
+      </i-row>
+      <i-row v-show="display">
+          <i-col span="24" class="margin-bottom">
+           <i-button type="Primary" class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
+          </i-col>
+      </i-row>
+      <i-row type="flex" class="filter-keywords" v-if="filters.length">
+        <i-col span="3" class="title">
+          <i-col class="margin-bottom text">
+            <Icon type="ios-funnel" /> 检索项：
+          </i-col>
+        </i-col>
+        <i-col span="21" class="margin-bottom text">
+            <template v-for="(item, index) in filters">
+                <i-tag :key="index" closable @on-close="removeTag(index)">{{item.display}}</i-tag>
+            </template>
+            <i-button type="text" size="small" @click="removeAllTags">清除所有</i-button>
+        </i-col>
+      </i-row>
+      <divider />
+      <i-table class="data-table" stripe :columns="columns" :data="data" ref="dataTable">
+          <template slot-scope="{row}" slot="Operation">
+                <a class="btn" href="javascript:;" @click="addModel(row)">[修改]</a>
+          </template>
+      </i-table>
+    </i-col>
+      <i-modal title="添加/编辑新闻" v-model="showDialog" :mask-closable="false" :width="900">
+        <i-form ref="form" :model="model" :label-width="100" :rules="rules">
+          <i-form-item label="分类名" prop="CatName">
+              <i-input v-model="model.CatName"/>
+          </i-form-item>
+          <i-form-item label="导航名" prop="Action">
+              <i-input v-model="model.Action"/>
+          </i-form-item>
+          <i-form-item label="所属分类" prop="ParentId">
+              <category-selector v-model="model.ParentId" :clearable="true"/>
+          </i-form-item>
+          <i-form-item label="排序号" prop="Reorder">
+              <i-input v-model="model.Reorder"/>
+              <p>排序号只能为<b>正整数</b></p>
+          </i-form-item>
+        </i-form>
+        <div slot="footer">
+            <Button type="primary" @click="confirm()" >确认</Button>
+            <Button @click="showDialog=false" >取消</Button>
+        </div>
+      </i-modal>
   </i-row>
 </template>
 
 <script>
+let app = require("@/config");
+let axios = require("axios");
+var _ = require("lodash");
+
 export default {
+    methods: {
+      ctrlDisplay () {
+        if (this.display === false) {
+          this.display = true;
+        } else {
+          this.display = false;
+        }
+      },
+      fixModel (row) {
+        let form = this.$refs["form"];
+        form.resetFields();
+        this.model.ID = row.ID;
+        this.model.CatName = row.CatName;
+        this.model.Action = row.Action;
+        this.model.ParentId = row.ParentId;
+        this.model.Reorder = row.Reorder;
+        this.addModel(this.model);
+      },
+      addModel (row) {
+        debugger;
+          let form = this.$refs["form"];
+            let flag = !row;
+            row=row||{
+              ID: "",
+              CatName: "",
+              Action: "",
+              ParentId: "",
+              Reorder: 1
+            }
+            this.model = {
+                ID: row.ID,
+                CatName: row.CatName,
+                Action: row.Action,
+                ParentId: row.ParentId,
+                Reorder: row.Reorder
+            };
+            flag && form.resetFields();
+            this.showDialog = true;
+        },
+      confirm () {
+        axios.post("/api/cms/SaveCategory", this.model, msg => {
+          if (msg.success) {
+            console.log(msg);
+            this.getData();
+          }
+        });
+        this.showDialog = false;
+      },
+      getData () {
+        let params = {
+            id: '00000000-0000-0000-0000-000000000000'
+        }
+        this.filters.forEach(e => {
+            if (!e.key || !e.value) {
+                return;
+            }
+            params[e.key] = e.value;
+        });
+        axios.post("/api/cms/categorylist", params, msg => {
+          if (msg.success) {
+            console.log(msg);
+            this.data = msg.data;
+          }
+        })
+      },
+      removeTag (index) {
+        let item = this.filters.splice(index, 1);
+        switch (item[0].key) {
+          case "cate":
+            this.keyword = "";
+            this.cateKeyword = "";
+            break;
+          case "act":
+            this.cateKeyword = "";
+            break;
+          default:
+            break;
+        }
+        this.getData();
+      },
+      removeAllTags () {
+        this.filters = [];
+        this.keyword = "";
+        this.cateKeyword = "";
+        this.actKeyword = "";
+        this.getData();
+      },
+      setAdvKeyword () {
+      let cateKeyword = this.cateKeyword;
+      let actKeyword = this.actKeyword;
+      let f = this.filters.findIndex(e => e.key === "cate");
+      if (cateKeyword) {
+        let ele = {
+          key: "cate",
+          display: `分类名：${cateKeyword}`,
+          value: cateKeyword
+        }
+        if (f > -1) {
+          this.filters[f] = ele;
+        } else {
+          this.filters.push(ele);
+        }
+      } else {
+        if (f > -1) {
+          this.filters.splice(f, 1);
+        }
+      }
+      f = this.filters.findIndex(e => e.key === "act");
+      if (actKeyword) {
+        let ele = {
+          key: "act",
+          display: `导航名：${actKeyword}`,
+          value: actKeyword
+        }
+        if (f > -1) {
+          this.filters[f] = ele;
+        } else {
+          this.filters.push(ele);
+        }
+      } else {
+        if (f > -1) {
+          this.filters.splice(f, 1);
+        }
+      }
+      },
+      advancedSearch () {
+        this.setAdvKeyword();
+        this.getData();
+      },
+      setKeyword: _.debounce(function () {
+        let keyword = this.keyword;
+        let f = this.filters.findIndex(e => e.key === "cate");
+        if (keyword) {
+          let ele = {
+            key: "cate",
+            display: `分类名：${keyword}`,
+            value: keyword
+          }
+          if (f > -1) {
+            this.filters[f] = ele;
+          } else {
+            this.filters.push(ele);
+          }
+        } else {
+          if (f > -1) {
+            this.filters.splice(f, 1);
+          }
+        }
+        this.getData();
+      }, 500)
+    },
     data () {
-        return {};
+        return {
+            columns: [
+                {
+                    key: "CatName",
+                    title: "分类"
+                },
+                {
+                    key: "Action",
+                    title: "导航名"
+                },
+                {
+                    key: "ParentName",
+                    title: "所属分类"
+                },
+                {
+                    slot: "Operation",
+                    title: "操作"
+                }
+            ],
+            display: false,
+            filters: [],
+            data: [],
+            keyword: "",
+            cateKeyword: "",
+            actKeyword: "",
+            id: '00000000-0000-0000-0000-000000000000',
+            showDialog: false,
+            model: {},
+            rules: {
+              CatName: { required: true, message: "必须填写分类名" },
+              Action: { required: true, message: "必须填写导航名" },
+              ParentId: { required: true, message: "必须填写所属分类" },
+              Reorder: { required: true, message: "必须填写XXX" }
+            }
+        };
+    },
+    watch: {
+        keyword (v) {
+            this.setKeyword();
+        }
+        /*
+        $route () {
+            let audit = this.$route.name.indexOf("Final") > -1 ? 5 : 4;
+            this.getData(1, audit);
+        }
+        */
+    },
+    mounted () {
+        app.title = "医院审核";
+        // let audit = this.$route.name.indexOf("Final") > -1 ? 5 : 4;
+        this.getData();
     }
 }
 </script>
 
 <style lang="less">
-
+  .text{
+    font-size: 14px;
+    word-spacing: 1px;
+    white-space: normal;
+    line-height: 32px;
+  }
+  .margin
+  {
+    margin-bottom: 8px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+  .middle
+  {
+    vertical-align: middle;
+  }
+  .margin-bottom{
+    margin-bottom: 16px;
+  }
 </style>
