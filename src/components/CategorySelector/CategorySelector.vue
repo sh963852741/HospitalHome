@@ -147,7 +147,7 @@ export default {
                     let item = e.node;
                     control.onOptionClick({
                         value: item.id,
-                        label: item.name,
+                        label: item.display,
                         node: item
                     })
                 }
