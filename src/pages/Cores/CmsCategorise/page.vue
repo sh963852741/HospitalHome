@@ -37,7 +37,7 @@
       </i-row>
       <i-row v-show="display">
           <i-col span="24" class="margin-bottom">
-           <i-button type="Primary" class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
+           <i-button type="primary" class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
           </i-col>
       </i-row>
       <i-row type="flex" class="filter-keywords" v-if="filters.length">
@@ -98,21 +98,10 @@ export default {
           this.display = false;
         }
       },
-      fixModel (row) {
-        let form = this.$refs["form"];
-        form.resetFields();
-        this.model.ID = row.ID;
-        this.model.CatName = row.CatName;
-        this.model.Action = row.Action;
-        this.model.ParentId = row.ParentId;
-        this.model.Reorder = row.Reorder;
-        this.addModel(this.model);
-      },
       addModel (row) {
-        debugger;
           let form = this.$refs["form"];
             let flag = !row;
-            row=row||{
+            row = row || {
               ID: "",
               CatName: "",
               Action: "",
@@ -132,7 +121,6 @@ export default {
       confirm () {
         axios.post("/api/cms/SaveCategory", this.model, msg => {
           if (msg.success) {
-            console.log(msg);
             this.getData();
           }
         });
@@ -150,7 +138,6 @@ export default {
         });
         axios.post("/api/cms/categorylist", params, msg => {
           if (msg.success) {
-            console.log(msg);
             this.data = msg.data;
           }
         })
@@ -290,7 +277,7 @@ export default {
         */
     },
     mounted () {
-        app.title = "医院审核";
+        app.title = "新闻分类管理";
         // let audit = this.$route.name.indexOf("Final") > -1 ? 5 : 4;
         this.getData();
     }
