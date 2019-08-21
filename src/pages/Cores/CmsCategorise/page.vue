@@ -7,7 +7,7 @@
       <i-row class="searcher" type="flex">
         <i-col class="middle margin" span="24">
           <i-col  span="2">
-            <i-button size="large" type=“Primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
+            <i-button size="large" type=“primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
           </i-col>
           <i-col span="12">
             <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData()" />
@@ -33,7 +33,7 @@
           <Input v-model="actKeyword"/>
         </i-col>
         <i-col span="2" style="float : right;">
-          <i-button type="Primary" class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
+          <i-button type="primary" class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
         </i-col>
       </i-row>
       <i-row style="height : 5px;"/>
