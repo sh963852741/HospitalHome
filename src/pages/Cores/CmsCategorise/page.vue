@@ -1,9 +1,9 @@
 <template>
   <i-row>
-    <i-col span="8">
-      <Tree ref="tree" :data="categoryTree" class="tree" :empty-text="emptyText" @on-select-change="selectCategory"></Tree>
+    <i-col span="5" class="tree">
+      <Tree ref="tree" :data="categoryTree" class="org-tree" :empty-text="emptyText" @on-select-change="selectCategory"></Tree>
     </i-col>
-    <i-col span="16">
+    <i-col span="18" offset="1">
       <i-row class="searcher" type="flex">
           <i-col  span="2">
             <i-button size="large" type=“primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
