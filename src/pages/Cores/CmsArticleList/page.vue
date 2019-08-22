@@ -3,7 +3,7 @@
         <i-col span="5" class="tree">
             <Tree ref="tree" :data="categoryTree" class="org-tree" :empty-text="emptyText" @on-select-change="selectCategory"></Tree>
         </i-col>
-        <i-col span="20">
+        <i-col span="19">
             <i-card class="panel">
                 <div class="header">
                     <span>{{category}}下的新闻</span>
@@ -15,7 +15,8 @@
                     <i-col span="8">
                         <i-input prefix="ios-search" size="large" placeholder="按标题搜索" v-model="topic" @keyup.enter.native="setFilter('topic', topic, '标题')" />
                     </i-col>
-                    <i-col span="2" offset="12">
+                    <i-col span="11"></i-col>
+                    <i-col span="2">
                         <i-button size="large" type="text" @click="toAdvance">{{ searchType }}</i-button>
                     </i-col>
                 </i-row>
@@ -34,10 +35,10 @@
                     </i-col>
                 </i-row>
                 <i-row type="flex" class="filter-keywords" v-if="filters.length">
-                    <i-col span="2" class="title">
+                    <i-col span="3" class="title">
                         <Icon type="ios-funnel" /> 检索项：
                     </i-col>
-                    <i-col span="22">
+                    <i-col span="21">
                         <template v-for="(item, index) in filters">
                             <i-tag :key="index" closable @on-close="removeTag(index)">{{item.display}}</i-tag>
                         </template>
@@ -247,7 +248,6 @@ export default {
             }
         }
     }
-
     .filter-keywords {
         margin-top: 24px;
         .title {
@@ -256,7 +256,6 @@ export default {
             color: @subsidiary-color;
         }
     }
-
     .data-table {
         margin-top: 24px;
     }

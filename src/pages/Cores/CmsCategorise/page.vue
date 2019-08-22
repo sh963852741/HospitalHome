@@ -93,7 +93,7 @@ export default {
         }
       },
        selectCategory (node, n) {
-                this.setFilter("CategoryId", n.id, "分类名", n.name);
+            this.setFilter("CategoryId", n.id, "所属分类", n.name);
         },
         setFilter (key, value, displayKey, displayValue) {
         let f = this.filters.findIndex(e => e.key === "id");
@@ -334,11 +334,11 @@ export default {
     line-height: 32px;
     text-align: center;
   }
-   .tree {
-        background: #808695;
-        color: #fff;
-        width: 260px;
-        min-height: fill-available;
-        @import "../../../assets/less/orgTree.less";
-    }
+  .tree {
+      background: #808695;
+      color: #fff;
+      width: 260px;
+      min-height: fill-available;
+      @import "../../../assets/less/orgTree.less";
+  }
 </style>
