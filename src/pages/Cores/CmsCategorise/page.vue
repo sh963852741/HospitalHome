@@ -1,9 +1,9 @@
 <template>
   <i-row>
-    <i-col span="8">
-      <Tree ref="tree" :data="categoryTree" class="tree" :empty-text="emptyText" @on-select-change="selectCategory"></Tree>
+    <i-col span="5" class="tree">
+      <Tree ref="tree" :data="categoryTree" class="org-tree" :empty-text="emptyText" @on-select-change="selectCategory"></Tree>
     </i-col>
-    <i-col span="16">
+    <i-col span="18" offset="1">
       <i-row class="searcher" type="flex">
           <i-col  span="2">
             <i-button size="large" type=“primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
@@ -93,7 +93,7 @@ export default {
         }
       },
        selectCategory (node, n) {
-                this.setFilter("CategoryId", n.id, "分类名", n.name);
+            this.setFilter("CategoryId", n.id, "所属分类", n.name);
         },
         setFilter (key, value, displayKey, displayValue) {
         let f = this.filters.findIndex(e => e.key === "id");
@@ -337,11 +337,11 @@ export default {
     line-height: 32px;
     text-align: center;
   }
-   .tree {
-        background: #808695;
-        color: #fff;
-        width: 260px;
-        min-height: fill-available;
-        @import "../../../assets/less/orgTree.less";
-    }
+  .tree {
+      background: #808695;
+      color: #fff;
+      width: 260px;
+      min-height: fill-available;
+      @import "../../../assets/less/orgTree.less";
+  }
 </style>
