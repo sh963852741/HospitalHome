@@ -22,11 +22,11 @@
                 </i-row>
                 <i-row class="advance-searcher" v-if="searchType === '普通搜索'" :gutter="16">
                     <i-col span="4">
-                        作者：
+                        <span>作者：</span>
                         <i-input v-model="author" />
                     </i-col>
                     <i-col span="4">
-                        发布时间：
+                        <span>发布时间：</span>
                         <DatePicker type="daterange" placement="bottom-end" v-model="releaseTime"></DatePicker>
                     </i-col>
                     <i-col span="24" class="filter-btn-area">

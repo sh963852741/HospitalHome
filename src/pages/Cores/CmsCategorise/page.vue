@@ -6,31 +6,29 @@
     <i-col span="18" offset="1">
       <i-row class="searcher" type="flex">
           <i-col  span="2">
-            <i-button size="large" type=“primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
+            <i-button size="large" class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
           </i-col>
-          <i-col span="18">
+          <i-col span="17">
             <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData()" />
           </i-col>
-          <i-col span="4">
-            <i-button size="large" type="text" @click="switchSearchMode()" class="ivu-btn ivu-btn-text" style="margin-left:6px;">{{display?"普通搜索":"高级搜索"}}</i-button>
+          <i-col span="3" offset="2">
+            <i-button size="large" @click="switchSearchMode()" class="ivu-btn ivu-btn-text">{{display?"普通搜索":"高级搜索"}}</i-button>
           </i-col>
       </i-row>
       <i-row style="height : 16px;"/>
-      <i-row v-show="display" class="text">
-        <i-col span="2">
+      <i-row v-show="display" class="adv-searcher">
+        <i-col span="9">
           <span>分类名：</span>
-        </i-col>
-        <i-col span="8">
           <Input v-model="cateKeyword"/>
         </i-col>
-        <i-col span="2">
+        <i-col span="1">&nbsp;</i-col>
+        <i-col span="9">
           <span>导航名:</span>
-        </i-col>
-        <i-col span="8">
           <Input v-model="actKeyword"/>
         </i-col>
-        <i-col span="2">
-          <i-button type="primary" class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
+        <i-col span="24">
+          <i-button class="ivu-btn ivu-btn-primary" style="margin-top:16px" @click="advancedSearch">搜索</i-button>
+          <i-button style="margin-top:16px" @click="removeAllTags()">清空</i-button>
         </i-col>
       </i-row>
       <i-row style="height : 5px;"/>
@@ -288,11 +286,9 @@ export default {
 </script>
 
 <style lang="less">
-  .text{
-    font-size: 14px;
-    word-spacing: 2px;
+  .adv-searcher{
+    font-size: 16px;
     line-height: 32px;
-    text-align: center;
   }
   .tree {
       background: #808695;
