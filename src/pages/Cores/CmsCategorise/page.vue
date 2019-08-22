@@ -168,6 +168,7 @@ export default {
       },
       getData () {
         let params = {
+          id: "00000000-0000-0000-0000-000000000000"
         }
         this.filters.forEach(e => {
             if (!e.key || !e.value) {
