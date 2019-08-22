@@ -12,7 +12,7 @@
             <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData()" />
           </i-col>
           <i-col span="4">
-            <i-button size="large" type="text" @click="switchSearchMode()" class="ivu-btn ivu-btn-text">{{display?"普通搜索":"高级搜索"}}</i-button>
+            <i-button size="large" type="text" @click="switchSearchMode()" class="ivu-btn ivu-btn-text" style="margin-left:6px;">{{display?"普通搜索":"高级搜索"}}</i-button>
           </i-col>
       </i-row>
       <i-row style="height : 16px;"/>
@@ -59,8 +59,8 @@
           <i-form-item label="分类名" prop="CatName">
               <i-input v-model="model.CatName"/>
           </i-form-item>
-          <i-form-item label="导航名" prop="Action">
-              <i-input v-model="model.Action"/>
+          <i-form-item label="导航名" prop="Act">
+              <i-input v-model="model.Act"/>
           </i-form-item>
           <i-form-item label="所属分类" prop="ParentId">
               <category-selector v-model="model.ParentId" :clearable="true"/>
@@ -135,7 +135,7 @@ export default {
       },
       addModel (row) {
           let form = this.$refs["form"];
-            row = row || {
+            row = row || { // 新建内容
               ID: "",
               CatName: "",
               Action: "",
@@ -145,18 +145,19 @@ export default {
             this.model = {
                 ID: row.ID,
                 CatName: row.CatName,
-                Action: row.Action,
+                Act: row.Action,
                 ParentId: row.ParentId,
                 Reorder: row.Reorder
             };
             // let flag = !row;
-            form.resetFields();
+            form.resetFields(); // ？
             this.showDialog = true;
         },
       confirm () {
         axios.post("/api/cms/SaveCategory", this.model, msg => {
           if (msg.success) {
             this.getData();
+            this.getcategoryTree();
           }
         });
         this.showDialog = false;
@@ -177,7 +178,7 @@ export default {
         })
       },
       removeTag (index) {
-        let item = this.filters.splice(index, 1);
+        let item = this.filters.splice(index, 1); // 返回包含被删除的元素的数组
         switch (item[0].key) {
           case "cate":
             this.keyword = "";
@@ -202,6 +203,8 @@ export default {
         this.keyword = "";
         this.cateKeyword = "";
         this.actKeyword = "";
+        let tree = this.$refs["tree"];
+        tree.handleSelect(0);
         this.getData();
       },
       setAdvKeyword () {
@@ -301,7 +304,7 @@ export default {
             model: {},
             rules: {
               CatName: { required: true, message: "必须填写分类名" },
-              Action: { required: true, message: "必须填写导航名" },
+              Act: { required: true, message: "必须填写导航名" },
               ParentId: { required: true, message: "必须填写所属分类" },
               Reorder: { required: true, message: "必须填写排序号" }
             }
