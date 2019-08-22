@@ -85,7 +85,7 @@ var _ = require("lodash");
 
 export default {
     methods: {
-      ctrlDisplay () {
+      switchSearchMode () {
         if (this.display === false) {
           this.display = true;
         } else {
@@ -108,8 +108,8 @@ export default {
                 ParentId: row.ParentId,
                 Reorder: row.Reorder
             };
-            let flag = !row;
-            flag && form.resetFields();
+            // let flag = !row;
+            form.resetFields();
             this.showDialog = true;
         },
       confirm () {
@@ -255,7 +255,7 @@ export default {
               CatName: { required: true, message: "必须填写分类名" },
               Action: { required: true, message: "必须填写导航名" },
               ParentId: { required: true, message: "必须填写所属分类" },
-              Reorder: { required: true, message: "必须填写XXX" }
+              Reorder: { required: true, message: "必须填写排序号" }
             }
         };
     },
