@@ -93,13 +93,13 @@ export default {
         }
       },
        selectCategory (node, n) {
-            this.setFilter("CategoryId", n.id, "所属分类", n.name);
+            this.setFilter("CategoryId", n.id, "所属分类", n.name, "id", n.id);
         },
-        setFilter (key, value, displayKey, displayValue) {
-        let f = this.filters.findIndex(e => e.key === "id");
-        if (value !== '00000000-0000-0000-0000-000000000000') {
+        setFilter (key, value, displayKey, displayValue, keyValue, judgeValue) {
+        let f = this.filters.findIndex(e => e.key === keyValue);
+        if (judgeValue) {
           let ele = {
-            key: "id",
+            key: keyValue,
             display: `${displayKey}：${displayValue}`,
             value: value
           }
@@ -109,10 +109,14 @@ export default {
             this.filters.push(ele);
           }
         } else {
-            this.filters.splice(f, 1);
+        if (f > -1) {
+          this.filters.splice(f, 1);
         }
+        }
+        if (keyValue === 'id') {
         this.getData();
         this.clickAll(displayValue);
+        }
         },
       getcategoryTree () {
          axios.post("/api/cms/GetCategoryTree", { withEmpty: true }, msg => {
@@ -210,40 +214,8 @@ export default {
       setAdvKeyword () {
       let cateKeyword = this.cateKeyword;
       let actKeyword = this.actKeyword;
-      let f = this.filters.findIndex(e => e.key === "cate");
-      if (cateKeyword) {
-        let ele = {
-          key: "cate",
-          display: `分类名：${cateKeyword}`,
-          value: cateKeyword
-        }
-        if (f > -1) {
-          this.filters[f] = ele;
-        } else {
-          this.filters.push(ele);
-        }
-      } else {
-        if (f > -1) {
-          this.filters.splice(f, 1);
-        }
-      }
-      f = this.filters.findIndex(e => e.key === "act");
-      if (actKeyword) {
-        let ele = {
-          key: "act",
-          display: `导航名：${actKeyword}`,
-          value: actKeyword
-        }
-        if (f > -1) {
-          this.filters[f] = ele;
-        } else {
-          this.filters.push(ele);
-        }
-      } else {
-        if (f > -1) {
-          this.filters.splice(f, 1);
-        }
-      }
+      this.setFilter('', cateKeyword, '分类名', cateKeyword, "cate", cateKeyword);
+      this.setFilter('', actKeyword, '导航名', actKeyword, "act", actKeyword);
       },
       advancedSearch () {
         this.setAdvKeyword();
@@ -251,23 +223,7 @@ export default {
       },
       setKeyword: _.debounce(function () {
         let keyword = this.keyword;
-        let f = this.filters.findIndex(e => e.key === "cate");
-        if (keyword) {
-          let ele = {
-            key: "cate",
-            display: `分类名：${keyword}`,
-            value: keyword
-          }
-          if (f > -1) {
-            this.filters[f] = ele;
-          } else {
-            this.filters.push(ele);
-          }
-        } else {
-          if (f > -1) {
-            this.filters.splice(f, 1);
-          }
-        }
+        this.setFilter('', keyword, '分类名', keyword, 'cate', keyword);
         this.getData();
       }, 500)
     },
