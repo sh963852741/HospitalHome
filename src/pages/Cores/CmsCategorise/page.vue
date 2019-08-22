@@ -8,29 +8,27 @@
           <i-col  span="2">
             <i-button size="large" class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
           </i-col>
-          <i-col span="18">
+          <i-col span="17">
             <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData()" />
           </i-col>
-          <i-col span="4">
-            <i-button size="large" @click="switchSearchMode()" class="ivu-btn ivu-btn-text" style="margin-left:6px;">{{display?"普通搜索":"高级搜索"}}</i-button>
+          <i-col span="3" offset="2">
+            <i-button size="large" @click="switchSearchMode()" class="ivu-btn ivu-btn-text">{{display?"普通搜索":"高级搜索"}}</i-button>
           </i-col>
       </i-row>
       <i-row style="height : 16px;"/>
-      <i-row v-show="display" class="text">
-        <i-col span="2">
+      <i-row v-show="display" class="adv-searcher">
+        <i-col span="9">
           <span>分类名：</span>
-        </i-col>
-        <i-col span="8">
           <Input v-model="cateKeyword"/>
         </i-col>
-        <i-col span="2">
+        <i-col span="1">&nbsp;</i-col>
+        <i-col span="9">
           <span>导航名:</span>
-        </i-col>
-        <i-col span="8">
           <Input v-model="actKeyword"/>
         </i-col>
-        <i-col span="2">
-          <i-button class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
+        <i-col span="24">
+          <i-button class="ivu-btn ivu-btn-primary" style="margin-top:16px" @click="advancedSearch">搜索</i-button>
+          <i-button style="margin-top:16px" @click="removeAllTags()">清空</i-button>
         </i-col>
       </i-row>
       <i-row style="height : 5px;"/>
@@ -93,13 +91,13 @@ export default {
         }
       },
        selectCategory (node, n) {
-            this.setFilter("CategoryId", n.id, "所属分类", n.name);
+            this.setFilter("CategoryId", n.id, "所属分类", n.name, "id", n.id);
         },
-        setFilter (key, value, displayKey, displayValue) {
-        let f = this.filters.findIndex(e => e.key === "id");
-        if (value !== '00000000-0000-0000-0000-000000000000') {
+        setFilter (key, value, displayKey, displayValue, keyValue, judgeValue) {
+        let f = this.filters.findIndex(e => e.key === keyValue);
+        if (judgeValue) {
           let ele = {
-            key: "id",
+            key: keyValue,
             display: `${displayKey}：${displayValue}`,
             value: value
           }
@@ -109,10 +107,14 @@ export default {
             this.filters.push(ele);
           }
         } else {
-            this.filters.splice(f, 1);
+        if (f > -1) {
+          this.filters.splice(f, 1);
         }
+        }
+        if (keyValue === 'id') {
         this.getData();
         this.clickAll(displayValue);
+        }
         },
       getcategoryTree () {
          axios.post("/api/cms/GetCategoryTree", { withEmpty: true }, msg => {
@@ -164,6 +166,7 @@ export default {
       },
       getData () {
         let params = {
+          id: "00000000-0000-0000-0000-000000000000"
         }
         this.filters.forEach(e => {
             if (!e.key || !e.value) {
@@ -210,40 +213,8 @@ export default {
       setAdvKeyword () {
       let cateKeyword = this.cateKeyword;
       let actKeyword = this.actKeyword;
-      let f = this.filters.findIndex(e => e.key === "cate");
-      if (cateKeyword) {
-        let ele = {
-          key: "cate",
-          display: `分类名：${cateKeyword}`,
-          value: cateKeyword
-        }
-        if (f > -1) {
-          this.filters[f] = ele;
-        } else {
-          this.filters.push(ele);
-        }
-      } else {
-        if (f > -1) {
-          this.filters.splice(f, 1);
-        }
-      }
-      f = this.filters.findIndex(e => e.key === "act");
-      if (actKeyword) {
-        let ele = {
-          key: "act",
-          display: `导航名：${actKeyword}`,
-          value: actKeyword
-        }
-        if (f > -1) {
-          this.filters[f] = ele;
-        } else {
-          this.filters.push(ele);
-        }
-      } else {
-        if (f > -1) {
-          this.filters.splice(f, 1);
-        }
-      }
+      this.setFilter('', cateKeyword, '分类名', cateKeyword, "cate", cateKeyword);
+      this.setFilter('', actKeyword, '导航名', actKeyword, "act", actKeyword);
       },
       advancedSearch () {
         this.setAdvKeyword();
@@ -251,23 +222,7 @@ export default {
       },
       setKeyword: _.debounce(function () {
         let keyword = this.keyword;
-        let f = this.filters.findIndex(e => e.key === "cate");
-        if (keyword) {
-          let ele = {
-            key: "cate",
-            display: `分类名：${keyword}`,
-            value: keyword
-          }
-          if (f > -1) {
-            this.filters[f] = ele;
-          } else {
-            this.filters.push(ele);
-          }
-        } else {
-          if (f > -1) {
-            this.filters.splice(f, 1);
-          }
-        }
+        this.setFilter('', keyword, '分类名', keyword, 'cate', keyword);
         this.getData();
       }, 500)
     },
@@ -331,11 +286,9 @@ export default {
 </script>
 
 <style lang="less">
-  .text{
-    font-size: 14px;
-    word-spacing: 2px;
+  .adv-searcher{
+    font-size: 16px;
     line-height: 32px;
-    text-align: center;
   }
   .tree {
       background: #808695;
