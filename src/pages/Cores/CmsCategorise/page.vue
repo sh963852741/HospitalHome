@@ -1,19 +1,19 @@
 <template>
   <i-row>
     <i-col span="8">
-      <Tree :data="data"></Tree>
+      <Tree ref="tree" :data="categoryTree" class="tree" :empty-text="emptyText" @on-select-change="selectCategory"></Tree>
     </i-col>
     <i-col span="16">
       <i-row class="searcher" type="flex">
-        <i-col  span="2">
-          <i-button size="large" type=“primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
-        </i-col>
-        <i-col span="18">
-          <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData()" />
-        </i-col>
-        <i-col span="4">
-          <i-button size="large" type="text" @click="switchSearchMode()" class="ivu-btn ivu-btn-text">{{display?"普通搜索":"高级搜索"}}</i-button>
-        </i-col>
+          <i-col  span="2">
+            <i-button size="large" type=“primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
+          </i-col>
+          <i-col span="18">
+            <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData()" />
+          </i-col>
+          <i-col span="4">
+            <i-button size="large" type="text" @click="switchSearchMode()" class="ivu-btn ivu-btn-text">{{display?"普通搜索":"高级搜索"}}</i-button>
+          </i-col>
       </i-row>
       <i-row style="height : 16px;"/>
       <i-row v-show="display" class="text">
@@ -29,7 +29,7 @@
         <i-col span="8">
           <Input v-model="actKeyword"/>
         </i-col>
-        <i-col span="2" >
+        <i-col span="2">
           <i-button type="primary" class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
         </i-col>
       </i-row>
@@ -92,6 +92,47 @@ export default {
           this.display = false;
         }
       },
+       selectCategory (node, n) {
+                this.setFilter("CategoryId", n.id, "分类名", n.name);
+        },
+        setFilter (key, value, displayKey, displayValue) {
+        let f = this.filters.findIndex(e => e.key === "id");
+        if (value !== '00000000-0000-0000-0000-000000000000') {
+          let ele = {
+            key: "id",
+            display: `${displayKey}：${displayValue}`,
+            value: value
+          }
+          if (f > -1) {
+            this.filters[f] = ele;
+          } else {
+            this.filters.push(ele);
+          }
+        } else {
+            this.filters.splice(f, 1);
+        }
+        this.getData();
+        this.clickAll(displayValue);
+        },
+      getcategoryTree () {
+         axios.post("/api/cms/GetCategoryTree", { withEmpty: true }, msg => {
+          if (msg.success) {
+            this.emptyText = "数据加载中...";
+            this.categoryTree = msg.data;
+            console.log(this.categoryTree);
+          }
+        });
+      },
+      clickAll (displayValue) {
+        if (displayValue === '所有分类') {
+           this.filters.forEach(e => {
+             if (e.key === 'id') {
+              this.filters.splice(e, 1);
+             }
+        });
+        this.getData();
+        }
+      },
       addModel (row) {
           let form = this.$refs["form"];
             row = row || {
@@ -122,7 +163,6 @@ export default {
       },
       getData () {
         let params = {
-            id: '00000000-0000-0000-0000-000000000000'
         }
         this.filters.forEach(e => {
             if (!e.key || !e.value) {
@@ -145,6 +185,12 @@ export default {
             break;
           case "act":
             this.cateKeyword = "";
+            break;
+          case "id":
+            this.keyword = "";
+            this.cateKeyword = "";
+            let tree = this.$refs["tree"];
+            tree.handleSelect(0);
             break;
           default:
             break;
@@ -245,6 +291,8 @@ export default {
             display: false,
             filters: [],
             data: [],
+            categoryTree: [],
+            emptyText: "暂无数据",
             keyword: "",
             cateKeyword: "",
             actKeyword: "",
@@ -274,6 +322,7 @@ export default {
         app.title = "新闻分类管理";
         // let audit = this.$route.name.indexOf("Final") > -1 ? 5 : 4;
         this.getData();
+        this.getcategoryTree();
     }
 }
 </script>
@@ -285,5 +334,11 @@ export default {
     line-height: 32px;
     text-align: center;
   }
-
+   .tree {
+        background: #808695;
+        color: #fff;
+        width: 260px;
+        min-height: fill-available;
+        @import "../../../assets/less/orgTree.less";
+    }
 </style>
