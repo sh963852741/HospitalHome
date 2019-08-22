@@ -12,7 +12,7 @@
           <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData()" />
         </i-col>
         <i-col span="4">
-          <i-button size="large" type="text" @click="ctrlDisplay()" class="ivu-btn ivu-btn-text">{{display?"普通搜索":"高级搜索"}}</i-button>
+          <i-button size="large" type="text" @click="switchSearchMode()" class="ivu-btn ivu-btn-text">{{display?"普通搜索":"高级搜索"}}</i-button>
         </i-col>
       </i-row>
       <i-row style="height : 16px;"/>
