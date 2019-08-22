@@ -21,7 +21,7 @@
           <span>分类名：</span>
           <Input v-model="cateKeyword"/>
         </i-col>
-        <i-col span="2">&nbsp;</i-col>
+        <i-col span="1">&nbsp;</i-col>
         <i-col span="9">
           <span>导航名:</span>
           <Input v-model="actKeyword"/>
