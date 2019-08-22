@@ -6,13 +6,13 @@
     <i-col span="18" offset="1">
       <i-row class="searcher" type="flex">
           <i-col  span="2">
-            <i-button size="large" type=“primary” class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
+            <i-button size="large" class="ivu-btn ivu-btn-primary" @click="addModel()">新建</i-button>
           </i-col>
           <i-col span="18">
             <i-input prefix="ios-search" :disabled="display" size="large" placeholder="搜索分类名" v-model="keyword" @keyup.enter.native="getData()" />
           </i-col>
           <i-col span="4">
-            <i-button size="large" type="text" @click="switchSearchMode()" class="ivu-btn ivu-btn-text" style="margin-left:6px;">{{display?"普通搜索":"高级搜索"}}</i-button>
+            <i-button size="large" @click="switchSearchMode()" class="ivu-btn ivu-btn-text" style="margin-left:6px;">{{display?"普通搜索":"高级搜索"}}</i-button>
           </i-col>
       </i-row>
       <i-row style="height : 16px;"/>
@@ -30,7 +30,7 @@
           <Input v-model="actKeyword"/>
         </i-col>
         <i-col span="2">
-          <i-button type="primary" class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
+          <i-button class="ivu-btn ivu-btn-primary" @click="advancedSearch">搜索</i-button>
         </i-col>
       </i-row>
       <i-row style="height : 5px;"/>
