@@ -8,7 +8,7 @@
                 <i-input prefix="ios-search" size="large" placeholder="搜索医院名称" v-model="keyword" @keyup.enter.native="getData" />
             </i-col>
           <i-col span="2" class="text">
-            <i-button size="large" @click="switchSearchMode()" class="ivu-btn ivu-btn-text">{{display?"普通搜索":"高级搜索"}}</i-button>
+            <i-button size="large" @click="switchSearchMode()" type="text">{{display?"普通搜索":"高级搜索"}}</i-button>
           </i-col>
         </i-row>
         <i-row v-show="display" type="flex">
@@ -35,7 +35,7 @@
         <i-row v-show="display" class="advance-searcher">
                 <i-col span="24" class="filter-btn-area">
                     <i-button type="primary" @click="advSearch">搜索</i-button>
-                    <i-button @click="removeAllTags">清空</i-button>
+                    <i-button >清空</i-button>
                 </i-col>
         </i-row>
         <i-divider />
