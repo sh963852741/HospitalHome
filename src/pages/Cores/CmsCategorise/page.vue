@@ -125,6 +125,9 @@ export default {
       this.getData();
     },
     setFilter (key, value, displayKey, displayValue) {
+      if (!value) {
+        return;
+      }
       let f = this.filters.findIndex(e => e.key === key);
       let ele = {
         key: key,

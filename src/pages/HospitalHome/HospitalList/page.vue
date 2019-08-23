@@ -35,7 +35,7 @@
         <i-row v-show="display" class="advance-searcher">
                 <i-col span="24" class="filter-btn-area">
                     <i-button type="primary" @click="advSearch">搜索</i-button>
-                    <i-button >清空</i-button>
+                    <i-button @click="removeAllTags">清空</i-button>
                 </i-col>
         </i-row>
         <i-divider />
@@ -57,6 +57,15 @@ let app = require("@/config");
 let axios = require("axios");
 export default {
     methods: {
+        removeAllTags () {
+            this.keyword = "";
+            this.area = "";
+            this.Attribute = "";
+            this.Displayorder = "";
+            this.level = "";
+            this.Name = "";
+            this.getData();
+        },
         advSearch () {
             // 参考getData
         },
