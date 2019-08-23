@@ -125,10 +125,13 @@ export default {
       this.getData();
     },
     setFilter (key, value, displayKey, displayValue) {
+      let f = this.filters.findIndex(e => e.key === key);
       if (!value) {
+        if (f > -1) {
+          this.filters.splice(f, 1);
+        }
         return;
       }
-      let f = this.filters.findIndex(e => e.key === key);
       let ele = {
         key: key,
         display: `${displayKey}：${displayValue}`,
@@ -201,11 +204,9 @@ export default {
           this.cateKeyword = "";
           break;
         case "act":
-          this.cateKeyword = "";
+          this.actKeyword = "";
           break;
         case "id":
-          this.keyword = "";
-          this.cateKeyword = "";
           let tree = this.$refs["tree"];
           tree.handleSelect(0);
           break;
