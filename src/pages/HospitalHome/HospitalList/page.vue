@@ -8,7 +8,7 @@
                 <i-input prefix="ios-search" size="large" placeholder="搜索医院名称" v-model="keyword" @keyup.enter.native="getData" />
             </i-col>
           <i-col span="2" class="text">
-            <i-button size="large" @click="switchSearchMode()" class="ivu-btn ivu-btn-text">{{display?"普通搜索":"高级搜索"}}</i-button>
+            <i-button size="large" @click="switchSearchMode()" type="text">{{display?"普通搜索":"高级搜索"}}</i-button>
           </i-col>
         </i-row>
         <i-row v-show="display" type="flex">
@@ -57,6 +57,15 @@ let app = require("@/config");
 let axios = require("axios");
 export default {
     methods: {
+        removeAllTags () {
+            this.keyword = "";
+            this.area = "";
+            this.Attribute = "";
+            this.Displayorder = "";
+            this.level = "";
+            this.Name = "";
+            this.getData();
+        },
         advSearch () {
             // 参考getData
         },
