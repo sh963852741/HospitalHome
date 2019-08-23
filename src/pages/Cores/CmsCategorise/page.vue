@@ -69,6 +69,7 @@
       <i-table class="data-table" stripe :columns="columns" :data="data" ref="dataTable">
         <template slot-scope="{row}" slot="Operation">
           <a class="btn" href="javascript:;" @click="addModel(row)">[修改]</a>
+          <a class="btn" href="javascript:;" @click="removeCategory(row.ID)">[删除]</a>
         </template>
       </i-table>
     </i-col>
@@ -92,7 +93,7 @@
         </i-form-item>
       </i-form>
       <div slot="footer">
-        <Button type="primary" @click="confirm()">确认</Button>
+        <Button type="primary" @click="SaveData()">确认</Button>
         <Button @click="showDialog=false">取消</Button>
       </div>
     </i-modal>
@@ -106,6 +107,21 @@ var _ = require("lodash");
 
 export default {
   methods: {
+    removeCategory (id) {
+            if (!confirm("是否删除这条记录")) {
+                return;
+            }
+
+            axios.post("/api/cms/RemoveCategory", {id}, msg => {
+                if (msg.success) {
+                    this.$Message.success("删除成功");
+                    this.getData();
+                    this.getcategoryTree();
+                } else {
+                    this.$Message.warning(msg.msg);
+                }
+            })
+        },
     switchSearchMode () {
       if (this.display === false) {
         this.display = true;
@@ -171,7 +187,7 @@ export default {
       form.resetFields(); // ？
       this.showDialog = true;
     },
-    confirm () {
+    SaveData () {
       axios.post("/api/cms/SaveCategory", this.model, msg => {
         if (msg.success) {
           this.getData();
