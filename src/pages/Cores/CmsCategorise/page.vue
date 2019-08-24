@@ -27,7 +27,7 @@
         <i-col span="3" offset="2">
           <i-button
             size="large"
-            @click="switchSearchMode()"
+            @click="display=!display"
             class="ivu-btn ivu-btn-text"
           >{{display?"普通搜索":"高级搜索"}}</i-button>
         </i-col>
@@ -111,8 +111,7 @@ export default {
             if (!confirm("是否删除这条记录")) {
                 return;
             }
-
-            axios.post("/api/cms/RemoveCategory", {id}, msg => {
+            axios.post("/api/cms/RemoveCategory", {id: id}, msg => {
                 if (msg.success) {
                     this.$Message.success("删除成功");
                     this.getData();
@@ -122,19 +121,9 @@ export default {
                 }
             })
         },
-    switchSearchMode () {
-      if (this.display === false) {
-        this.display = true;
-      } else {
-        this.display = false;
-      }
-    },
     selectCategory (node, n) {
       if (n.id === "00000000-0000-0000-0000-000000000000") {
-        let f = this.filters.findIndex(e => e.key === "id");
-        if (f !== -1) {
-          this.filters.splice(f, 1);
-        }
+        this.setFilter("id");
       } else {
         this.setFilter("id", n.id, "所属分类", n.name);
       }
@@ -142,20 +131,15 @@ export default {
     },
     setFilter (key, value, displayKey, displayValue) {
       let f = this.filters.findIndex(e => e.key === key);
-      if (!value) {
-        if (f > -1) {
-          this.filters.splice(f, 1);
-        }
-        return;
-      }
-      let ele = {
-        key: key,
-        display: `${displayKey}：${displayValue}`,
-        value: value
-      };
       if (f > -1) {
-        this.filters[f] = ele;
-      } else {
+        this.filters.splice(f, 1);
+      }
+      if (value) {
+        let ele = {
+          key: key,
+          display: `${displayKey}：${displayValue}`,
+          value: value
+        }
         this.filters.push(ele);
       }
     },
@@ -176,6 +160,7 @@ export default {
         ParentId: "",
         Reorder: 1
       };
+      form.resetFields();
       this.model = {
         ID: row.ID,
         CatName: row.CatName,
@@ -183,8 +168,6 @@ export default {
         ParentId: row.ParentId,
         Reorder: row.Reorder
       };
-      // let flag = !row;
-      form.resetFields(); // ？
       this.showDialog = true;
     },
     SaveData () {
