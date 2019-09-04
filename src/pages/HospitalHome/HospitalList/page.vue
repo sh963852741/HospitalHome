@@ -1,12 +1,42 @@
 <template>
     <div id="hospital-list">
-        <i-row class="searcher" type="flex">
+        <i-row class="advance-searcher" type="flex">
             <i-col span="2" class="add-btn-area" v-if="permissions.add">
                 <i-button size="large" type="primary" @click="goTo()">新建医院</i-button>
             </i-col>
-            <i-col span="6">
+            <i-col span="9">
                 <i-input prefix="ios-search" size="large" placeholder="搜索医院名称" v-model="keyword" @keyup.enter.native="getData" />
             </i-col>
+          <i-col span="2" class="text">
+            <i-button size="large" @click="switchSearchMode()" type="text">{{display?"普通搜索":"高级搜索"}}</i-button>
+          </i-col>
+        </i-row>
+        <i-row v-show="display" type="flex">
+            <i-col span="4">
+                医院等级:
+                <i-input v-model="level" />
+            </i-col>
+            <i-col span="1"/>
+            <i-col span="4">
+                医院地址：
+                <i-input v-model="area"/>
+            </i-col>
+            <i-col span="1"/>
+            <i-col span="4">
+            医院属性:
+            <i-input v-model="Attribute" />
+            </i-col>
+            <i-col span="1"/>
+            <i-col span="4">
+                排序号：
+                <i-input v-model="Displayorder"/>
+            </i-col>
+        </i-row>
+        <i-row v-show="display" class="advance-searcher">
+                <i-col span="24" class="filter-btn-area">
+                    <i-button type="primary" @click="advSearch">搜索</i-button>
+                    <i-button @click="removeAllTags">清空</i-button>
+                </i-col>
         </i-row>
         <i-divider />
         <i-table class="data-table" stripe :columns="columns" :data="data">
@@ -27,6 +57,25 @@ let app = require("@/config");
 let axios = require("axios");
 export default {
     methods: {
+        removeAllTags () {
+            this.keyword = "";
+            this.area = "";
+            this.Attribute = "";
+            this.Displayorder = "";
+            this.level = "";
+            this.Name = "";
+            this.getData();
+        },
+        advSearch () {
+            // 参考getData
+        },
+        switchSearchMode () {
+            if (this.display === false) {
+            this.display = true;
+            } else {
+            this.display = false;
+            }
+        },
         goTo (id) {
             this.$router.push({ name: "HospitalDetail", query: { id } });
         },
@@ -89,7 +138,14 @@ export default {
             },
             page: 1,
             pageSize: 10,
-            totalRow: 0
+            totalRow: 0,
+            display: false,
+            searchType: "高级搜索",
+            Name: "",
+            level: "",
+            area: "",
+            Attribute: "",
+            Displayorder: ""
         };
     },
     mounted () {
@@ -100,5 +156,16 @@ export default {
 </script>
 
 <style lang="less">
-
+.text{
+    font-size: 14px;
+    word-spacing: 2px;
+    line-height: 32px;
+    text-align: center;
+  }
+  .advance-searcher {
+        margin: 24px 0px;
+        .filter-btn-area {
+            margin-top: 16px;
+        }
+    }
 </style>

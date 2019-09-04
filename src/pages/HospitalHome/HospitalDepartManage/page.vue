@@ -2,7 +2,7 @@
     <i-card id="hospital-depart-manager">
         <i-row class="searcher" type="flex">
             <i-col span="2" class="add-btn-area">
-                <i-button type="primary" @click="addModel()" >添加科室</i-button>
+                <i-button type="primary" size="large" @click="addModel()" >添加科室</i-button>
             </i-col>
             <i-col span="6">
                 <i-input prefix="ios-search" size="large" placeholder="按名称查询" v-model="name" @keyup.enter.native="getData" />
