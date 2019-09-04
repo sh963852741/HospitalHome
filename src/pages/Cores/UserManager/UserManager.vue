@@ -18,7 +18,31 @@
                 </div>
                 <Button @click="showUserDetail('')" v-if="permissions.add">添加成员</Button>
                 <!-- <Button>删除成员</Button> -->
-                <Table :loading="isLoadingUser" stripe :columns="columns1" :data="userData" class="user-table" width="100%"></Table>
+                <Table :loading="isLoadingUser" stripe :columns="columns1" :data="userData" class="user-table" width="100%">
+                    <template slot="isBind" slot-scope="{row}">
+                        <template v-if="row.OpenId">
+                            <template v-if="permissions.unbind">
+                                <a href="javascript:;" @click="unbind(row.ID, row.OpenId)">[解除微信绑定]</a>
+                            </template>
+                            <template v-else>
+                                已绑定
+                            </template>
+                        </template>
+                        <template v-else>
+                            <template v-if="permissions.bind && row.UserType.indexOf('R') !== 0">
+                                <a href="javascript:;" @click="bind(row.ID)">[发送绑定邀请]</a>
+                            </template>
+                            <template v-else-if="row.UserType.indexOf('R') === 0">
+                                <a href="javascript:;" @click="bind(row.ID)" title="点此刷新二维码">
+                                    <img width="100" :src="'/qr/' + row.UserType" style="margin: 10px 0px;" />
+                                </a>
+                            </template>
+                            <template v-else>
+                                未绑定
+                            </template>
+                        </template>
+                    </template>
+                </Table>
                 <Page :total="totalUsers" :current.sync="page" :page-size="pageSize" @on-change="pageChage" @on-page-size-change="pageSizeChange" show-elevator show-sizer show-total/>
             </i-col>
             <user-detail :user-id="userId" v-if="showTab === 'detail'" @on-saved="showUser" />
@@ -75,6 +99,26 @@ const axios = require("axios");
 export default {
     components: { OrgSelector, UserDetail },
     methods: {
+        unbind (id, openId) {
+            axios.post("/api/security/UnbindWechat", { id, openId }, msg => {
+                if (msg.success) {
+                    this.$Message.success("解绑成功");
+                    this.getUsers();
+                } else {
+                    this.$Message.warning(msg.msg || "解绑失败");
+                }
+            })
+        },
+        bind (id) {
+            axios.post("/api/security/BindingWechat", { id }, msg => {
+                if (msg.success) {
+                    this.$Message.success("已经发送绑定邀请");
+                    this.getUsers();
+                } else {
+                    this.$Message.warning(msg.msg || "解绑失败");
+                }
+            })
+        },
         renderOrgTree (h, {root, node, data}) {
             let THIS = this;
             return h('span', {
@@ -86,7 +130,7 @@ export default {
                         THIS.departId = data.id;
                         THIS.depart = data.name === "无部门" ? "所有部门" : data.name
                         THIS.isAll = data.name === "无部门";
-                        THIS.getUsers();
+                        THIS.getUsers(1);
                     }
                 }
             }, [
@@ -191,9 +235,10 @@ export default {
             this.pageSize = pz;
             this.getUsers();
         },
-        getUsers: _.debounce(function () {
+        getUsers: _.debounce(function (page) {
             this.isLoadingUser = true;
             this.showTab = "user";
+            this.page = page || this.page;
             axios.post("/api/security/GetUsers", { departId: this.departId, isAll: this.isAll, page: this.page, pageSize: this.pageSize }, msg => {
                 this.isLoadingUser = false;
                 if (msg.success) {
@@ -243,6 +288,10 @@ export default {
                     key: 'Mobile'
                 },
                 {
+                    title: "是否绑定微信",
+                    slot: "isBind"
+                },
+                {
                     title: '操作',
                     key: 'ID',
                     render (h, params) {
@@ -285,6 +334,8 @@ export default {
             permissions: {
                 add: app.checkPermission("Security.AddUser"),
                 edit: app.checkPermission("Security.EditUser"),
+                bind: app.checkPermission("Security.SendWechatLink"),
+                unbind: app.checkPermission("Security.UnbindWechat"),
                 remove: app.checkPermission("Security.RemoveUser")
             },
             removeDialog: {
