@@ -14,7 +14,7 @@
         <div>
             <i-table class="data-table" stripe :data="data" :columns="columns">
                 <template slot-scope="{row}" slot="CheckStatus">
-                    {{dic[row.CheckStatus]}}
+                    <a class="btn" href="javascript:;" @click="report(row.ID)">{{dic[row.CheckStatus]}}</a>
                 </template>
                 <template slot-scope="{row}" slot="Download">
                     <a class="btn" v-if="row.CSharpFileId!==empty" @click="download(row.CSharpFileId, row.HospitalName + '.cs')">[下载C#文件]</a>
@@ -67,14 +67,17 @@ export default {
             this.isloading = true;
             axios.post(`/api/hospital/${api}`, { id }, msg => {
                 this.isloading = false;
+                loading();
                 if (msg.success) {
                     this.$Message.success("操作成功！");
-                    loading();
                     this.getData();
                 } else {
-                    this.$Message.warn(msg.msg);
+                    this.$Message.warning(msg.msg);
                 }
             })
+        },
+        report (id) {
+            window.open(`/api/hospital/DownloadReport?id=${id}`)
         }
     },
     data () {
@@ -86,6 +89,10 @@ export default {
             {
                 key: "UploadTime",
                 title: "上传时间"
+            },
+            {
+                key: "Contributor",
+                title: "上传者"
             },
             {
                 slot: "CheckStatus",

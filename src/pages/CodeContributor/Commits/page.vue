@@ -4,7 +4,7 @@
         <div>
             <i-table class="data-table" stripe :data="data" :columns="columns">
                 <template slot-scope="{row}" slot="CheckStatus">
-                    {{dic[row.CheckStatus]}}
+                    <a class="btn" href="javascript:;" @click="report(row.ID)">{{dic[row.CheckStatus]}}</a>
                 </template>
                 <template slot-scope="{row}" slot="Download">
                     <a class="btn" v-if="row.CSharpFileId!==empty" @click="download(row.CSharpFileId, hospitalName + '.cs')">[下载C#文件]</a>
@@ -58,6 +58,9 @@ export default {
                     this.$Message.warn(msg.msg);
                 }
             })
+        },
+        report (id) {
+            window.open(`/api/hospital/DownloadReport?id=${id}`)
         }
     },
     data () {
