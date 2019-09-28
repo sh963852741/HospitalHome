@@ -170,6 +170,11 @@ const components = {
     path: "/manage/hospital/SymptomGuide",
     layout: "admin",
     component: () => import(/* webpackChunkName: "hospital" */"@p/HospitalHome/SymptomGuide")
+  },
+  Profile: {
+    path: "/manage/profile",
+    layout: "admin",
+    component: () => import(/* webpackChunkName: "hospital" */"@p/UCenter/Profile")
   }
 }
 

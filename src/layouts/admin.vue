@@ -26,7 +26,46 @@
         <Layout>
             <Affix>
                 <Header :style="{padding: 0}" class="layout-header-bar">
-                    <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0 20px'}" type="md-menu" size="24"></Icon>
+                    <Row >
+                        <i-col span="20">
+                            <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0 20px'}" type="md-menu" size="24"></Icon>
+                        </i-col>
+                        <i-col span="1">
+                            <Dropdown trigger="click">
+                                <a href="javascript:void(0)">
+                                    <Icon type="md-add" size="24"></Icon>
+                                    <Icon type="md-arrow-dropdown" />
+                                </a>
+                                <DropdownMenu slot="list">
+                                    <DropdownItem>建设中</DropdownItem>
+                                    <DropdownItem>建设中</DropdownItem>
+                                    <DropdownItem>建设中</DropdownItem>
+                                    <DropdownItem>建设中</DropdownItem>
+                                    <DropdownItem>建设中</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </i-col>
+                        <i-col span="1">
+                            <Icon :style="{margin: '0 5px'}" type="md-notifications-outline" size="24"></Icon>
+                        </i-col>
+                        <i-col span="1">
+                            <Dropdown trigger="click">
+                                <a href="javascript:void(0)">
+                                    <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
+                                    <Icon type="md-arrow-dropdown" />
+                                </a>
+                                <DropdownMenu slot="list">
+                                    <DropdownItem>
+                                        <router-link :to="{name: 'Profile'}">个人中心</router-link>
+                                    </DropdownItem>
+                                    <DropdownItem>
+                                        <router-link :to="{name: 'Profile'}">账户设置</router-link>
+                                    </DropdownItem>
+                                    <DropdownItem>退出</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </i-col>
+                    </Row>
                 </Header>
             </Affix>
             <Content :style="{margin: '20px'}" class="content">
@@ -92,6 +131,9 @@ export default {
         },
         collapsedSider () {
             this.$refs.side1.toggleCollapse();
+        },
+        toProfile () {
+            this.$router.push({ name: "Profile" });
         }
     },
     data () {
