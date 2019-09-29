@@ -27,7 +27,7 @@
         <i-col span="3" offset="2">
           <i-button
             size="large"
-            @click="switchSearchMode()"
+            @click="display=!display"
             class="ivu-btn ivu-btn-text"
           >{{display?"普通搜索":"高级搜索"}}</i-button>
         </i-col>
@@ -69,6 +69,7 @@
       <i-table class="data-table" stripe :columns="columns" :data="data" ref="dataTable">
         <template slot-scope="{row}" slot="Operation">
           <a class="btn" href="javascript:;" @click="addModel(row)">[修改]</a>
+          <a class="btn" href="javascript:;" @click="removeCategory(row.ID)">[删除]</a>
         </template>
       </i-table>
     </i-col>
@@ -92,7 +93,7 @@
         </i-form-item>
       </i-form>
       <div slot="footer">
-        <Button type="primary" @click="confirm()">确认</Button>
+        <Button type="primary" @click="SaveData()">确认</Button>
         <Button @click="showDialog=false">取消</Button>
       </div>
     </i-modal>
@@ -106,19 +107,23 @@ var _ = require("lodash");
 
 export default {
   methods: {
-    switchSearchMode () {
-      if (this.display === false) {
-        this.display = true;
-      } else {
-        this.display = false;
-      }
-    },
+    removeCategory (id) {
+            if (!confirm("是否删除这条记录")) {
+                return;
+            }
+            axios.post("/api/cms/RemoveCategory", {id: id}, msg => {
+                if (msg.success) {
+                    this.$Message.success("删除成功");
+                    this.getData();
+                    this.getcategoryTree();
+                } else {
+                    this.$Message.warning(msg.msg);
+                }
+            })
+        },
     selectCategory (node, n) {
       if (n.id === "00000000-0000-0000-0000-000000000000") {
-        let f = this.filters.findIndex(e => e.key === "id");
-        if (f !== -1) {
-          this.filters.splice(f, 1);
-        }
+        this.setFilter("id");
       } else {
         this.setFilter("id", n.id, "所属分类", n.name);
       }
@@ -126,20 +131,15 @@ export default {
     },
     setFilter (key, value, displayKey, displayValue) {
       let f = this.filters.findIndex(e => e.key === key);
-      if (!value) {
-        if (f > -1) {
-          this.filters.splice(f, 1);
-        }
-        return;
-      }
-      let ele = {
-        key: key,
-        display: `${displayKey}：${displayValue}`,
-        value: value
-      };
       if (f > -1) {
-        this.filters[f] = ele;
-      } else {
+        this.filters.splice(f, 1);
+      }
+      if (value) {
+        let ele = {
+          key: key,
+          display: `${displayKey}：${displayValue}`,
+          value: value
+        }
         this.filters.push(ele);
       }
     },
@@ -160,6 +160,7 @@ export default {
         ParentId: "",
         Reorder: 1
       };
+      form.resetFields();
       this.model = {
         ID: row.ID,
         CatName: row.CatName,
@@ -167,11 +168,9 @@ export default {
         ParentId: row.ParentId,
         Reorder: row.Reorder
       };
-      // let flag = !row;
-      form.resetFields(); // ？
       this.showDialog = true;
     },
-    confirm () {
+    SaveData () {
       axios.post("/api/cms/SaveCategory", this.model, msg => {
         if (msg.success) {
           this.getData();

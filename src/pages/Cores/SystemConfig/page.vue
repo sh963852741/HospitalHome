@@ -19,47 +19,34 @@
                     <i-button class="confirm" type="primary" size="large" :loading="basic.loading" @click="confirm('basic', '/api/config/SetBasicConfig')">确认</i-button>
                     <i-button size="large" @click="bindConfig('basic', '/api/config/GetBasicConfig')">取消</i-button>
                 </i-card>
-                <i-card id="nms" icon="ios-cog" class="mb16">
+                <i-card id="wechat" icon="ios-cog" class="mb16">
                     <p slot="title">
-                        <i-switch v-model="nms.model.nmsOpen" size="small" />  短信配置
+                        微信配置
                     </p>
-                    <i-alert type="error" show-icon v-if="!nms.model.nmsOpen">
-                        禁用短信模式
-                        <template slot="desc">
-                            在短信模式禁用后，系统不会再发送任何短信，同时也不会产生短信相关的费用。前台所有界面，关于短信发送的内容全部禁用。
-                        </template>
-                    </i-alert>
-                    <i-alert type="warning" show-icon v-if="nms.model.nmsOpen && nms.model.nmsDebug">
-                        短信调试模式
-                        <template slot="desc">
-                            启用短信调试模式以后，系统不会发送手机短信，不会产生短信相关费用。前台所有界面，在点击“获取手机验证码”按钮以后，均会自动填写正确的验证码。<br/>
-                            并且没有1分钟只能发一条的限制。
-                        </template>
-                    </i-alert>
-                    <i-form :label-width="120" :model="nms.model" ref="nms" :rules="nms.rules">
-                        <i-form-item label="启用调试模式" prop="nmsDebug">
-                            <i-switch v-model="nms.model.nmsDebug" />
+                    <i-form :label-width="120" :model="wechat.model" ref="wechat" :rules="wechat.rules">
+                        <i-form-item label="AppId" prop="appId">
+                            <i-input v-model="wechat.model.appId" placeholder="填写微信公众平台申请到的AppId" class="form-control" />
                         </i-form-item>
-                        <i-form-item label="AccessKeyID">
-                            <i-input v-model="nms.model.accessKeyID" placeholder="填写阿里云处申请到的AccessKeyID" class="form-control" />
+                        <i-form-item label="AppSecret">
+                            <i-input v-model="wechat.model.appSecret" type="password" placeholder="填写微信公众平台申请到的AppSecret" class="form-control" />
                             <p>此处放空则视为不修改。</p>
                         </i-form-item>
-                        <i-form-item label="AccessKeySecret">
-                            <i-input v-model="nms.model.accessKeySecret" type="password" placeholder="填写阿里云处申请到的AccessKeySecret" class="form-control" />
+                        <i-form-item label="商户号">
+                            <i-input v-model="nms.model.signature" placeholder="填写微信公众平台申请到的MerchantId" class="form-control" />
                             <p>此处放空则视为不修改。</p>
                         </i-form-item>
-                        <i-form-item label="短信签名">
-                            <i-input v-model="nms.model.signature" placeholder="填写阿里云处申请到的短信签名" class="form-control" />
+                        <i-form-item label="Key">
+                            <i-input v-model="nms.model.templateCode" placeholder="填写微信公众平台申请到的交易Key" class="form-control" />
                             <p>此处放空则视为不修改。</p>
                         </i-form-item>
-                        <i-form-item label="模板代码">
-                            <i-input v-model="nms.model.templateCode" placeholder="填写阿里云处申请到的模板代码" class="form-control" />
-                            <p>此处放空则视为不修改。</p>
+                        <i-form-item label="">
+                            <i-button type="default" @click="testWechat()">测试链接</i-button>
+                            <p>在保存后，点此链接可以测试是否成功。</p>
                         </i-form-item>
                     </i-form>
                     <i-divider />
-                    <i-button class="confirm" type="primary" size="large" :loading="nms.loading" @click="confirm('nms', '/api/config/SaveMNSConfig')">确认</i-button>
-                    <i-button size="large" @click="bindConfig('nms', '/api/config/GetMNSConfig')">取消</i-button>
+                    <i-button class="confirm" type="primary" size="large" :loading="nms.loading" @click="confirm('wechat', '/api/config/SaveWechatConfig')">确认</i-button>
+                    <i-button size="large" @click="bindConfig('wechat', '/api/config/GetWechatConfig')">取消</i-button>
                 </i-card>
                 <i-card id="email" icon="ios-cog" class="mb16">
                     <p slot="title">
@@ -110,12 +97,55 @@
                     <i-button class="confirm" type="primary" size="large" :loading="email.loading" @click="confirm('email', '/api/config/SaveEmailConfig')">确认</i-button>
                     <i-button size="large" @click="bindConfig('email', '/api/config/GetEmailConfig')">取消</i-button>
                 </i-card>
+                <i-card id="nms" icon="ios-cog" class="mb16">
+                    <p slot="title">
+                        <i-switch v-model="nms.model.nmsOpen" size="small" />  短信配置
+                    </p>
+                    <i-alert type="error" show-icon v-if="!nms.model.nmsOpen">
+                        禁用短信模式
+                        <template slot="desc">
+                            在短信模式禁用后，系统不会再发送任何短信，同时也不会产生短信相关的费用。前台所有界面，关于短信发送的内容全部禁用。
+                        </template>
+                    </i-alert>
+                    <i-alert type="warning" show-icon v-if="nms.model.nmsOpen && nms.model.nmsDebug">
+                        短信调试模式
+                        <template slot="desc">
+                            启用短信调试模式以后，系统不会发送手机短信，不会产生短信相关费用。前台所有界面，在点击“获取手机验证码”按钮以后，均会自动填写正确的验证码。<br/>
+                            并且没有1分钟只能发一条的限制。
+                        </template>
+                    </i-alert>
+                    <i-form :label-width="120" :model="nms.model" ref="nms" :rules="nms.rules">
+                        <i-form-item label="启用调试模式" prop="nmsDebug">
+                            <i-switch v-model="nms.model.nmsDebug" />
+                        </i-form-item>
+                        <i-form-item label="AccessKeyID">
+                            <i-input v-model="nms.model.accessKeyID" placeholder="填写阿里云处申请到的AccessKeyID" class="form-control" />
+                            <p>此处放空则视为不修改。</p>
+                        </i-form-item>
+                        <i-form-item label="AccessKeySecret">
+                            <i-input v-model="nms.model.accessKeySecret" type="password" placeholder="填写阿里云处申请到的AccessKeySecret" class="form-control" />
+                            <p>此处放空则视为不修改。</p>
+                        </i-form-item>
+                        <i-form-item label="短信签名">
+                            <i-input v-model="nms.model.signature" placeholder="填写阿里云处申请到的短信签名" class="form-control" />
+                            <p>此处放空则视为不修改。</p>
+                        </i-form-item>
+                        <i-form-item label="模板代码">
+                            <i-input v-model="nms.model.templateCode" placeholder="填写阿里云处申请到的模板代码" class="form-control" />
+                            <p>此处放空则视为不修改。</p>
+                        </i-form-item>
+                    </i-form>
+                    <i-divider />
+                    <i-button class="confirm" type="primary" size="large" :loading="nms.loading" @click="confirm('nms', '/api/config/SaveMNSConfig')">确认</i-button>
+                    <i-button size="large" @click="bindConfig('nms', '/api/config/GetMNSConfig')">取消</i-button>
+                </i-card>
             </i-col>
             <i-col span="4">
                 <i-anchor show-ink :offset-top="84">
                     <i-anchor-link title="网站设置" href="#basic" />
-                    <i-anchor-link title="短信配置" href="#nms" />
+                    <i-anchor-link title="微信配置" href="#wechat" />
                     <i-anchor-link title="邮箱配置" href="#email" />
+                    <i-anchor-link title="短信配置" href="#nms" />
                 </i-anchor>
             </i-col>
         </i-row>
@@ -170,11 +200,21 @@ export default {
                 this.email.testLoading = false;
                 this.email.model.test = "";
             })
+        },
+        testWechat () {
+            axios.post("/api/wechat/WechatInfo", {}, msg => {
+                if (msg.success) {
+                    this.$Message.success("配置成功");
+                } else {
+                    this.$Message.warning("配置失败")
+                }
+            })
         }
     },
     mounted () {
         app.title = "系统配置"
         this.bindConfig('basic', '/api/config/GetBasicConfig');
+        this.bindConfig('wechat', '/api/config/GetWechatConfig');
         this.bindConfig('nms', '/api/config/GetMNSConfig');
         this.bindConfig('email', '/api/config/GetEmailConfig');
     },
@@ -197,6 +237,13 @@ export default {
                 loading: false,
                 init: true,
                 model: {
+                    appId: "",
+                    appSecret: "",
+                    merchantId: "",
+                    key: ""
+                },
+                rules: {
+                    appId: { required: true, message: "必须填写AppId" }
                 }
             },
             nms: {
