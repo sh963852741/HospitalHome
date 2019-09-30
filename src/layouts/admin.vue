@@ -32,7 +32,7 @@
                         </i-col>
                         <i-col span="1">
                             <Dropdown trigger="click">
-                                <a href="javascript:void(0)">
+                                <a href="javascript:;">
                                     <Icon type="md-add" size="24"></Icon>
                                     <Icon type="md-arrow-dropdown" />
                                 </a>
@@ -50,7 +50,7 @@
                         </i-col>
                         <i-col span="1">
                             <Dropdown trigger="click">
-                                <a href="javascript:void(0)">
+                                <a href="javascript:;">
                                     <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
                                     <Icon type="md-arrow-dropdown" />
                                 </a>
