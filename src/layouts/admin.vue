@@ -61,7 +61,9 @@
                                     <DropdownItem>
                                         <router-link :to="{name: 'Profile'}">账户设置</router-link>
                                     </DropdownItem>
-                                    <DropdownItem>退出</DropdownItem>
+                                    <DropdownItem @click.native="logout()">
+                                        <router-link :to="{name: 'Login'}">退出</router-link>
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </i-col>
@@ -78,6 +80,7 @@
 
 <script>
 import { Layout, Sider, Menu, MenuItem, Header, Icon, Content, Affix, Submenu } from 'iview'
+import Axios from 'axios';
 const app = require('@/config')
 export default {
     components: { Layout, Sider, Menu, MenuItem, Header, Icon, Content, Affix, Submenu },
@@ -134,6 +137,15 @@ export default {
         },
         toProfile () {
             this.$router.push({ name: "Profile" });
+        },
+        logout () {
+            Axios.post("/api/security/logout", {currentUserGuid: app.currentUserGuid}, msg => {
+                if (msg.success === true) {
+                    this.$Message.success("登出成功");
+                } else {
+                    this.$Message.warning("登出失败");
+                }
+            })
         }
     },
     data () {
