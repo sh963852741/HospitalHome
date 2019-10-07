@@ -6,7 +6,7 @@
             <i-input style="width:700px;" type="text" size="large"/>
         </formItem>
         <formItem label="简介">
-            <i-input style="width:700px;" type="textarea" size="large" rows="5"/>
+            <i-input style="width:700px;" type="textarea" size="large" :rows="5"/>
         </formItem>
         <formItem label="地址">
             <i-input style="width:700px;" type="text" size="large"/>
@@ -16,8 +16,8 @@
         </formItem>
         <formItem label="头像">
           <i-row>
-            <i-col span="2">
-             <avatar-uploader :width="80" :height="80" :showText="false"/>
+            <i-col span="3">
+             <avatar-uploader :width="128" :height="128" usage="imgAvatar" single relate-table="Users" />
             </i-col>
             <i-col span="15">
               <i-button icon="md-download" >上传头像</i-button>
