@@ -2,16 +2,16 @@
   <card>
     <i-form label-position="top" style="margin:20px">
         <formItem label="个人信息"></formItem>
-        <formItem label="昵称" >
+        <formItem label="姓名" >
             <i-input style="width:700px;" type="text" size="large"/>
         </formItem>
-        <formItem label="简介">
-            <i-input style="width:700px;" type="textarea" size="large" :rows="5"/>
+        <formItem label="学/工号" >
+            <i-input style="width:700px;" disabled type="text" size="large"/>
         </formItem>
-        <formItem label="地址">
+        <formItem label="手机">
             <i-input style="width:700px;" type="text" size="large"/>
         </formItem>
-        <formItem label="职业">
+        <formItem label="邮箱">
             <i-input style="width:700px;" type="text" size="large"/>
         </formItem>
         <formItem label="头像">
