@@ -32,10 +32,10 @@
                         </i-col>
                         <i-col span="1">
                             <Dropdown trigger="click">
-                                <a href="javascript:;">
+                                <div style="cursor:pointer">
                                     <Icon type="md-add" size="24"></Icon>
                                     <Icon type="md-arrow-dropdown" />
-                                </a>
+                                </div>
                                 <DropdownMenu slot="list">
                                     <DropdownItem>建设中</DropdownItem>
                                     <DropdownItem>建设中</DropdownItem>
@@ -46,23 +46,23 @@
                             </Dropdown>
                         </i-col>
                         <i-col span="1">
-                            <Icon :style="{margin: '0 5px'}" type="md-notifications-outline" size="24"></Icon>
+                            <Icon :style="[{margin: '0 5px'},{cursor: 'pointer'}]" type="md-notifications-outline" size="24"></Icon>
                         </i-col>
                         <i-col span="1">
                             <Dropdown trigger="click">
-                                <a href="javascript:;">
+                                <div style="cursor:pointer">
                                     <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
                                     <Icon type="md-arrow-dropdown" />
-                                </a>
+                                </div>
                                 <DropdownMenu slot="list">
                                     <DropdownItem>
-                                        <router-link :to="{name: 'Profile'}">个人中心</router-link>
+                                        <router-link :to="{name: 'Profile'}" tag="div">个人中心</router-link>
                                     </DropdownItem>
                                     <DropdownItem>
-                                        <router-link :to="{name: 'Profile'}">账户设置</router-link>
+                                        <router-link :to="{name: 'Profile'}" tag="div">账户设置</router-link>
                                     </DropdownItem>
                                     <DropdownItem @click.native="logout()">
-                                        <router-link :to="{name: 'Login'}">退出</router-link>
+                                        <router-link :to="{name: 'Login'}" tag="div">退出</router-link>
                                     </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
@@ -145,6 +145,7 @@ export default {
                 } else {
                     this.$Message.warning("登出失败");
                 }
+                this.$router.push({ name: "Login" });
             })
         }
     },
