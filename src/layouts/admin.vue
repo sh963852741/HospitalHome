@@ -37,11 +37,7 @@
                                     <Icon type="md-arrow-dropdown" />
                                 </div>
                                 <DropdownMenu slot="list">
-                                    <DropdownItem>建设中</DropdownItem>
-                                    <DropdownItem>建设中</DropdownItem>
-                                    <DropdownItem>建设中</DropdownItem>
-                                    <DropdownItem>建设中</DropdownItem>
-                                    <DropdownItem>建设中</DropdownItem>
+                                    
                                 </DropdownMenu>
                             </Dropdown>
                         </i-col>
@@ -51,7 +47,7 @@
                         <i-col span="1">
                             <Dropdown trigger="click">
                                 <div style="cursor:pointer">
-                                    <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
+                                    <Avatar :src="app.userInfo.avatar" />
                                     <Icon type="md-arrow-dropdown" />
                                 </div>
                                 <DropdownMenu slot="list">
@@ -152,6 +148,7 @@ export default {
     data () {
         if (!app.toMenu) app.toMenu = this.collapseMenu;
         return {
+            app,
             isCollapsed: false,
             menus: app.menus,
             openMenus: [],
