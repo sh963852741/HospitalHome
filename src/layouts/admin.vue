@@ -36,9 +36,7 @@
                                     <Icon type="md-add" size="24"></Icon>
                                     <Icon type="md-arrow-dropdown" />
                                 </div>
-                                <DropdownMenu slot="list">
-                                    
-                                </DropdownMenu>
+                                <DropdownMenu slot="list"></DropdownMenu>
                             </Dropdown>
                         </i-col>
                         <i-col span="1">

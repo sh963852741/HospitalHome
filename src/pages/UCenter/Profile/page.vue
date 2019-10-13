@@ -1,20 +1,21 @@
 <template>
   <card>
-    <i-form ref="user-form" label-position="top" style="margin:20px" :model="model" :rules="rules">
-      <formItem label="个人信息"></formItem>
-      <formItem label="姓名" prop="realName">
+    <div style="margin-top:10px">个人信息</div>
+    <divider/>
+    <i-form ref="user-form" label-position="top" :model="model" :rules="rules">
+      <i-form-item label="姓名" prop="realName">
         <i-input style="width:700px;" type="text" size="large" v-model="model.realName" />
-      </formItem>
-      <formItem label="学/工号" prop="code">
+      </i-form-item>
+      <i-form-item label="学/工号" prop="code">
         <i-input style="width:700px;" disabled type="text" size="large" :value="model.userCode" />
-      </formItem>
-      <formItem label="手机" prop="mobile">
+      </i-form-item>
+      <i-form-item label="手机" prop="mobile">
         <i-input style="width:700px;" type="text" size="large" v-model="model.mobile" />
-      </formItem>
-      <formItem label="邮箱" prop="email">
+      </i-form-item>
+      <i-form-item label="邮箱" prop="email">
         <i-input style="width:700px;" type="text" size="large" v-model="model.email" />
-      </formItem>
-      <formItem label="头像" prop="avatar">
+      </i-form-item>
+      <i-form-item label="头像" prop="avatar">
         <i-row>
           <i-col span="3">
             <avatar-uploader
@@ -28,7 +29,7 @@
           </i-col>
         </i-row>
         <i-button type="success" style="margin-top:10px" @click="save" :loading="isloading">确认更新</i-button>
-      </formItem>
+      </i-form-item>
     </i-form>
   </card>
 </template>
