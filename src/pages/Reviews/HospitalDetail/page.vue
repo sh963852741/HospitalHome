@@ -166,6 +166,9 @@ export default {
             let model = { ...this.model };
             model.Status = status;
             model.Tags = this.tags.join(",");
+            model.Province = model.Location[0];
+            model.City = model.Location[1];
+            model.Area = model.Location[2];
             this.loading = true;
             axios.postStream("/api/hospital/SaveReviewHospital", model, msg => {
                 this.loading = false;
@@ -181,6 +184,9 @@ export default {
             let model = { ...this.model };
             model.Status = status;
             model.Tags = this.tags.join(",");
+            model.Province = model.Location[0];
+            model.City = model.Location[1];
+            model.Area = model.Location[2];
             this.loading = true;
             axios.postStream("/api/hospital/SaveFinalHospital", model, msg => {
                 this.loading = false;

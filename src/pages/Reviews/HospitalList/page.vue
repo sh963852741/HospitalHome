@@ -52,8 +52,10 @@ var _ = require("lodash");
 export default {
     methods: {
         goTo (id) {
-            let page = this.$route.name.indexOf("Final") > 0 ? "Final" : "Review";
-            this.$router.push({ name: `Hospital${page}Detail`, query: {id} });
+            // let page = this.$route.name.indexOf("Final") > 0 ? "Final" : "Review";
+            // this.$router.push({ name: `Hospital${page}Detail`, query: {id} });
+            let page = this.$route.name.indexOf("Final") > 0 ? "final" : "reviews";
+            window.open(`/manage/${page}/hospital?id=${id}`);
         },
         getData (page, filter) {
             let params = {
@@ -74,7 +76,7 @@ export default {
                     this.pageSize = msg.pageSize;
                     if (filter) {
                         let dt = this.$refs["dataTable"];
-                        dt.handleFilterSelect(2, filter);
+                        dt.handleFilterSelect(4, filter);
                     }
                 }
             })
@@ -87,7 +89,7 @@ export default {
                     break;
                 case "status":
                     let dt = this.$refs["dataTable"];
-                    dt.handleFilterReset(2);
+                    dt.handleFilterReset(4);
                     break;
                 default:
                     break;
@@ -98,7 +100,7 @@ export default {
             this.filters = [];
             this.keyword = "";
             let dt = this.$refs["dataTable"];
-            dt.handleFilterReset(2);
+            dt.handleFilterReset(4);
             this.getData(1);
         },
         setKeyword: _.debounce(function () {
@@ -152,6 +154,14 @@ export default {
                 {
                     slot: "Name",
                     title: "名称"
+                },
+                {
+                    key: "Province",
+                    title: "所在省"
+                },
+                {
+                    key: "City",
+                    title: "所在市"
                 },
                 {
                     key: "CreatedOn",
