@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { Layout, Sider, Menu, MenuItem, Header, Icon, Content, Affix, Submenu } from 'iview'
+import { Layout, Sider, Menu, MenuItem, Header, Icon, Content, Affix, Submenu } from 'view-design'
 import Axios from 'axios';
 const app = require('@/config')
 export default {
