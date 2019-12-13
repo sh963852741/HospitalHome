@@ -11,6 +11,17 @@
             <i-button size="large" @click="switchSearchMode()" type="text">{{display?"普通搜索":"高级搜索"}}</i-button>
           </i-col>
         </i-row>
+        <i-row type="flex" class="filter-keywords" v-if="filters.length">
+            <i-col span="4" class="title">
+                <Icon type="ios-funnel" /> 检索项：
+            </i-col>
+            <i-col span="22">
+                <template v-for="(item, index) in filters">
+                    <i-tag :key="index" closable @on-close="removeTag(index)">{{item.display}}</i-tag>
+                </template>
+                <i-button type="text" size="small" @click="removeAllTags">清除所有</i-button>
+            </i-col>
+        </i-row>
         <i-row v-show="display" type="flex">
             <i-col span="4">
                 医院等级:
@@ -55,6 +66,7 @@
 <script>
 let app = require("@/config");
 let axios = require("axios");
+var _ = require("lodash");
 export default {
     methods: {
         removeAllTags () {
@@ -66,8 +78,18 @@ export default {
             this.Name = "";
             this.getData();
         },
+        removeTag (index) {
+            let item = this.filters.splice(index, 1);
+            switch (item[0].key) {
+                case "keyword":
+                    this.keyword = "";
+                    break;
+                default:
+                    break;
+            }
+            this.getData();
+        },
         advSearch () {
-            // 参考getData
         },
         switchSearchMode () {
             if (this.display === false) {
@@ -79,11 +101,18 @@ export default {
         goTo (id) {
             this.$router.push({ name: "HospitalDetail", query: { id } });
         },
-        getData () {
-            let page = this.page;
-            let pageSize = this.pageSize;
-            let keyword = this.keyword;
-            axios.post("/api/hospital/GetHospitals", { page, pageSize, keyword }, msg => {
+        getData (page, filter) {
+            let params = {
+                page: page || this.page,
+                pageSize: this.pageSize
+            }
+            this.filters.forEach(e => {
+                if (!e.key || !e.value) {
+                    return;
+                }
+                params[e.key] = e.value;
+            });
+            axios.post("/api/hospital/GetHospitals", params, msg => {
                 if (msg.success) {
                     this.data = msg.data;
                     this.totalRow = msg.totalRow;
@@ -100,7 +129,28 @@ export default {
                     this.getData();
                 }
             })
-        }
+        },
+        setKeyword: _.debounce(function () {
+            let keyword = this.keyword;
+            let f = this.filters.findIndex(e => e.key === "keyword");
+            if (keyword) {
+                let ele = {
+                    key: "keyword",
+                    display: `关键字：${keyword}`,
+                    value: keyword
+                }
+                if (f > -1) {
+                    this.filters[f] = ele;
+                } else {
+                    this.filters.push(ele);
+                }
+            } else {
+                if (f > -1) {
+                    this.filters.splice(f, 1);
+                }
+            }
+            this.getData();
+        }, 500)
     },
     data () {
         return {
@@ -145,9 +195,15 @@ export default {
             level: "",
             area: "",
             Attribute: "",
-            Displayorder: ""
+            Displayorder: "",
+            filters: []
         };
     },
+    watch: {
+    keyword (v) {
+      this.setKeyword();
+    }
+  },
     mounted () {
         app.title = "医院列表"
         this.getData();
