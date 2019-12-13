@@ -1,7 +1,7 @@
 <template>
     <div id="hospital-list">
-        <i-row class="advance-searcher" type="flex">
-            <i-col span="2" class="add-btn-area" v-if="permissions.add">
+        <i-row class="advance-searcher">
+            <i-col span="2" v-if="permissions.add">
                 <i-button size="large" type="primary" @click="goTo()">新建医院</i-button>
             </i-col>
             <i-col span="9">
@@ -10,17 +10,6 @@
           <i-col span="2" class="text">
             <i-button size="large" @click="switchSearchMode()" type="text">{{display?"普通搜索":"高级搜索"}}</i-button>
           </i-col>
-        </i-row>
-        <i-row type="flex" class="filter-keywords" v-if="filters.length">
-            <i-col span="4" class="title">
-                <Icon type="ios-funnel" /> 检索项：
-            </i-col>
-            <i-col span="22">
-                <template v-for="(item, index) in filters">
-                    <i-tag :key="index" closable @on-close="removeTag(index)">{{item.display}}</i-tag>
-                </template>
-                <i-button type="text" size="small" @click="removeAllTags">清除所有</i-button>
-            </i-col>
         </i-row>
         <i-row v-show="display" type="flex">
             <i-col span="4">
@@ -44,10 +33,17 @@
             </i-col>
         </i-row>
         <i-row v-show="display" class="advance-searcher">
-                <i-col span="24" class="filter-btn-area">
-                    <i-button type="primary" @click="advSearch">搜索</i-button>
-                    <i-button @click="removeAllTags">清空</i-button>
-                </i-col>
+            <i-col span="24">
+                <i-button type="primary" @click="advSearch">搜索</i-button>
+                <i-button @click="removeAllTags">清空</i-button>
+            </i-col>
+        </i-row>
+        <i-row v-show="filters.length">
+            <Icon type="ios-funnel" /> 检索项：
+            <template v-for="(item, index) in filters">
+                <i-tag :key="index" closable @on-close="removeTag(index)">{{item.display}}</i-tag>
+            </template>
+            <i-button type="text" size="small" @click="removeAllTags">清除所有</i-button>
         </i-row>
         <i-divider />
         <i-table class="data-table" stripe :columns="columns" :data="data">
@@ -92,11 +88,7 @@ export default {
         advSearch () {
         },
         switchSearchMode () {
-            if (this.display === false) {
-            this.display = true;
-            } else {
-            this.display = false;
-            }
+            this.display = !this.display;
         },
         goTo (id) {
             this.$router.push({ name: "HospitalDetail", query: { id } });
@@ -220,8 +212,5 @@ export default {
   }
   .advance-searcher {
         margin: 24px 0px;
-        .filter-btn-area {
-            margin-top: 16px;
-        }
     }
 </style>
